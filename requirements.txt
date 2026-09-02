@@ -1,0 +1,10 @@
+# Python side of memristec-skill (executed with Python 3.12, 2026-09).
+numpy>=2.0,<3
+scipy>=1.14
+matplotlib>=3.9
+pyyaml
+jupyter
+ipykernel
+nbconvert>=7
+pytest>=7
+pyflakes
