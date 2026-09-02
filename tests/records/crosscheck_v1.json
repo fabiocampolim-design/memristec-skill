@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "generated": "2026-09-01",
+  "note": "Tolerances of our clean-room models vs the MemrisTec Model Library clone at commit f13423f5 (main). Relative errors are max over a (x, v) grid; the trajectory check integrates both derivative fields with our rk4 on the same sine.",
+  "models": {
+    "HP_Biolek2009": {"max_rel_dxdt": 1e-9, "max_rel_i": 1e-12, "upstream_window_actual": "joglekar", "finding": "P-1"},
+    "Yakopcic2013":  {"max_rel_dxdt": 1e-9, "max_rel_i": 1e-12, "max_abs_x_traj": 1e-6}
+  }
+}
