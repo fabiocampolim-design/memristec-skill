@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 — unreleased
+## 0.1.0 — 2026-09-01
 
 Foundation: environment and installers; Apache-2.0 licence, NOTICE, guards
 (licence, withheld material, vendored conformance); toolkit with the
