@@ -1,0 +1,6 @@
+# Vendored byte-identical files must not be CRLF-converted on checkout
+# (tests/test_githubify_conformance.py compares them byte-for-byte with the
+# playbook's copy; core.autocrlf=true would break that on a fresh checkout).
+tests/conformance.py text eol=lf
+tests/test_githubify_conformance.py text eol=lf
+scripts/*.sh text eol=lf

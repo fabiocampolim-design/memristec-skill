@@ -1,0 +1,29 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  fast:
+    name: suite (${{ matrix.os }}, py${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install -r requirements.txt
+      # rule 5: static check over the whole tree, as its own step, before the suite
+      - run: python -m pip install --quiet pyflakes && python -m pyflakes scripts tests
+      - run: python scripts/verify_memristec.py
+        env:
+          PYTHONIOENCODING: utf-8
+      - run: python -m pytest tests -q
+        env:
+          PYTHONIOENCODING: utf-8

@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this skill, please cite it as below, and cite the model papers listed in references/models.md."
+title: "memristec-skill: an AI-agent skill, verified toolkit and course on compact memristor models (MemrisTec Model Platform)"
+type: software
+version: "0.1.0"
+date-released: "2026-09-01"
+license: Apache-2.0
+authors:
+  - family-names: Campolim
+    given-names: Fabio
+keywords:
+  - memristor
+  - compact model
+  - resistive switching
+  - MemrisTec
+  - AI-agent skill
+  - undergraduate course
+references:
+  - type: software
+    title: "MemrisTec Model Library"
+    url: https://git-ce.rwth-aachen.de/memristec/memristec-model-library
+    notes: "no licence file as of 2026-09-01; studied, not redistributed"

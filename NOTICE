@@ -1,0 +1,25 @@
+memristec-skill
+Copyright 2026 Fabio Campolim
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+This skill studies the MemrisTec Model Library
+(https://git-ce.rwth-aachen.de/memristec/memristec-model-library, part of the
+DFG priority programme SPP 2262 "MemrisTec" coordinated by TU Dresden). It
+contains no code from that library: every model here is written from the
+published paper cited in references/models.md. The optional cross-check in
+scripts/upstream_adapter.py runs a copy of the library that you clone
+yourself; that copy is never redistributed by this project.
+
+This project is independent and not affiliated with or endorsed by MemrisTec,
+the DFG, TU Dresden or RWTH Aachen University.
