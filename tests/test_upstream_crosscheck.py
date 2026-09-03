@@ -13,7 +13,7 @@ import numpy as np
 import pytest
 
 from conftest import ROOT
-from memristec_tools import LinearIonDrift, Yakopcic2013
+from memristec_tools import LinearIonDrift, StanfordPKU2016, VTEAM2015, Yakopcic2013
 import upstream_adapter as ua
 
 RECORDS = os.path.join(ROOT, "tests", "records", "crosscheck_v1.json")
@@ -66,3 +66,26 @@ def test_yakopcic2013_matches_upstream_derivative_and_current():
     assert r["max_rel_dxdt"] <= tol["max_rel_dxdt"] and r["max_rel_i"] <= tol["max_rel_i"]
     tr = ua.trajectory_crosscheck(ours, theirs, amplitude=1.0, frequency=1.0, cycles=1)
     assert tr["max_abs_x"] <= tol["max_abs_x_traj"]
+
+
+@needs_lib
+def test_vteam2015_matches_upstream_after_state_normalisation():
+    theirs = ua.load_upstream("VTEAM2015", LIB)
+    ours = VTEAM2015(**theirs.params)
+    tol = _records()["models"]["VTEAM2015"]
+    v = np.concatenate([np.linspace(-1.0, -0.35, 8), np.linspace(0.35, 1.0, 8)])   # outside the dead band
+    r = ua.crosscheck(ours, theirs, np.linspace(0.02, 0.98, 25), v)
+    assert r["max_rel_dxdt"] <= tol["max_rel_dxdt"] and r["max_rel_i"] <= tol["max_rel_i"]
+    for vv in np.linspace(theirs.params["v_on"], theirs.params["v_off"], 5):          # dead band: both zero
+        assert ours.state_derivative(0.5, vv) == 0.0 == theirs.state_derivative(0.5, vv)
+    tr = ua.trajectory_crosscheck(ours, theirs, amplitude=0.3, frequency=100.0, cycles=1, n_per_cycle=4000)
+    assert tr["max_abs_x"] <= tol["max_abs_x_traj"]
+
+
+@needs_lib
+def test_stanford_pku_matches_upstream_gap_dynamics_and_current():
+    theirs = ua.load_upstream("Stanford_PKU", LIB)
+    ours = StanfordPKU2016(**theirs.params)
+    tol = _records()["models"]["Stanford_PKU"]
+    r = ua.crosscheck(ours, theirs, np.linspace(0.01, 0.99, 25), np.linspace(-1.5, 1.5, 21))
+    assert r["max_rel_dxdt"] <= tol["max_rel_dxdt"] and r["max_rel_i"] <= tol["max_rel_i"]

@@ -28,7 +28,7 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(HERE, ".."))
 sys.path.insert(0, HERE)
-from memristec_tools import LinearIonDrift, Yakopcic2013, __version__, simulate  # noqa: E402
+from memristec_tools import LinearIonDrift, StanfordPKU2016, VTEAM2015, Yakopcic2013, __version__, simulate  # noqa: E402
 
 
 def find_library():
@@ -86,9 +86,56 @@ def _shim_yakopcic2013(mod, source):
                          x0=obj.xo, params=params)
 
 
-SHIMS = {"HP_Biolek2009": _shim_hp_biolek2009, "Yakopcic2013": _shim_yakopcic2013}
+def _shim_vteam2015(mod, source):
+    obj = mod.VTEAM2015()
+    span = float(obj.w_off) - float(obj.w_on)              # metres; our x = (w - w_on) / span
+    params = {"R_on": float(obj.Ron), "R_off": float(obj.Roff),
+              "v_on": float(obj.v_on), "v_off": float(obj.v_off),
+              "k_on": float(obj.kon) / span, "k_off": float(obj.koff) / span,
+              "alpha_on": float(obj.alpha_on), "alpha_off": float(obj.alpha_off),
+              "window": 1, "x0": (float(obj.w0) - float(obj.w_on)) / span}
+
+    def w_of(x):
+        return float(obj.w_on) + x * span
+
+    return UpstreamModel("VTEAM2015", source, obj,
+                         dxdt=lambda x, v: obj.dw_dt(0.0, w_of(x), v) / span,
+                         current=lambda x, v: obj.current(v, w_of(x)),
+                         x0=params["x0"], params=params)
+
+
+def _shim_stanford_pku(mod, source):
+    obj = mod.Stanford_PKU()
+    span = float(obj.g_max_m) - float(obj.g_min_m)          # metres; our x = (g_max - g) / span
+    alpha = float(obj.alpha)
+    params = {"I0": float(obj.I0_A), "g0": float(obj.g0_m), "V0": float(obj.V0_V),
+              "nu0": float(obj.nu0_mps), "Ea": float(obj.Ea_eV), "a0": float(obj.a0_m),
+              "t_ox": float(obj.tOX_m), "gamma0": float(obj.gamma0),
+              "beta": float(obj.beta) * (1e-9) ** alpha,     # their gamma uses g in metres
+              "alpha": alpha, "T0": float(obj.T0_K), "R_th": float(obj.RTH_KW),
+              "g_min": float(obj.g_min_m), "g_max": float(obj.g_max_m),
+              "clip_arg": 40.0, "x0": (float(obj.g_max_m) - float(obj.g)) / span}
+
+    def g_of(x):
+        return float(obj.g_max_m) - x * span
+
+    def dxdt(x, v):
+        g = g_of(x)
+        i = obj.I(g, v)
+        # their T_of(V, I) = T0 + V I R_th has no abs(); V I >= 0 for this current law, so it equals our |v i| form
+        return -obj.dgdt(g, v, obj.T_of(v, i)) / span
+
+    return UpstreamModel("Stanford_PKU", source, obj, dxdt=dxdt,
+                         current=lambda x, v: obj.I(g_of(x), v),
+                         x0=params["x0"], params=params)
+
+
+SHIMS = {"HP_Biolek2009": _shim_hp_biolek2009, "Yakopcic2013": _shim_yakopcic2013,
+         "VTEAM2015": _shim_vteam2015, "Stanford_PKU": _shim_stanford_pku}
 OURS = {"HP_Biolek2009": lambda p: LinearIonDrift(window="joglekar", **p),
-        "Yakopcic2013": lambda p: Yakopcic2013(**p)}
+        "Yakopcic2013": lambda p: Yakopcic2013(**p),
+        "VTEAM2015": lambda p: VTEAM2015(**p),
+        "Stanford_PKU": lambda p: StanfordPKU2016(**p)}
 
 
 def load_upstream(name, library):

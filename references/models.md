@@ -159,8 +159,14 @@ not in the study repo yet.
 
 **Cross-check.** `tests/test_upstream_crosscheck.py` vs upstream `VTEAM2015`:
 the shim converts their `w` (metres, in `[w_on, w_off]`) and rates (m/s) to our
-normalised state; results and tolerances in `tests/records/crosscheck_v1.json`
-(filled in by the cross-check task).
+normalised state. Measured 2026-09-03 on clone `f13423f`: max relative
+difference of dx/dt 2.0e-16 and of i 2.1e-16 on a 25×16 `(x, v)` grid outside
+the dead band, both fields exactly zero inside it, trajectory difference
+5e-18 under a 0.3 V, 100 Hz sine. The parameter set read from their
+`model.yml` (`R_on = 387 Ω`, `R_off = 1069.5 Ω`, `v_on = −0.15 V`,
+`v_off = 0.16 V`, normalised `k_on = −2.2e4 s⁻¹`, `k_off = 249 s⁻¹`,
+`α = 3`, `x0 = 0.89`) is a fitted device set, not our defaults; both run
+through the same equations. Tolerances: `tests/records/crosscheck_v1.json`.
 
 ## `stanford_pku2016` — Stanford–PKU RRAM model, Jiang et al. 2016
 
@@ -213,8 +219,14 @@ with `rk4` (`references/pitfalls.md`); `method="ivp"` with the driver's
 
 **Cross-check.** `tests/test_upstream_crosscheck.py` vs upstream `Stanford_PKU`:
 the shim maps their gap (metres) and their `gamma = gamma0 − beta g^alpha` with
-`g` in metres to our nm-normalised form (`beta_ours = beta (1e-9)^alpha`);
-tolerances in `tests/records/crosscheck_v1.json`.
+`g` in metres to our nm-normalised form (`beta_ours = beta (1e-9)^alpha`).
+Measured 2026-09-03 on clone `f13423f`: max relative difference of dx/dt
+3.5e-15 and of i 0 on a 25×21 `(x, v)` grid over ±1.5 V. Their parameter set
+(hard-coded in `__init__`: `Ea = 1.24 eV`, `nu0 = 200 m/s`, `gamma0 = 4.8`,
+`alpha = 1.1`, `t_ox = 7.1 nm`, `R_th = 500 K/W`, gap 0.20–1.15 nm) differs from
+ours and from the paper's HfOx set; the equations agree. Their folder's own
+`run_loop()` cannot run (finding **P-6**: it instantiates an undefined
+`MemristorModel`). Tolerances: `tests/records/crosscheck_v1.json`.
 
 ## The other upstream folders (planned)
 
