@@ -65,6 +65,28 @@ Exit codes: 0 every comparison within tolerance, 1 a comparison exceeded
 Exit codes: 0 all checks passed, 1 otherwise. Without a library the fifth
 check prints `[SKIP] upstream cross-check`.
 
+## `build/assemble.py` and `build/execute.py` — the book
+
+Chapters are generated: edit `build/partNN_*.py`, run assemble then execute;
+`tests/test_notebooks.py` compares the committed notebooks with the sources
+and their outputs (0 FAIL, captions = figures, ≤ 1 MB). Never edit an `.ipynb`.
+
+| flag | tool | meaning |
+|---|---|---|
+| `--which KEY` | both | `all` (default), `main`, or one chapter key (`00` … `06`; `--list` shows them) |
+| `--outdir DIR` | both | assemble: repository root receiving `chapters/`; execute: write executed copies under `<outdir>/chapters/` instead of in place |
+| `--log-dir DIR` | both | audit log directory (default `<outdir>/logs`; `logs/` is gitignored) |
+| `--list` | assemble | print chapters, parts, cell and figure counts; write nothing |
+| `--indir DIR` | execute | repository root holding `chapters/` (default: this repository) |
+| `--kernel NAME` | execute | Jupyter kernel (default `memristec-mc`) |
+| `--timeout SEC` | execute | per-cell timeout (default 900) |
+| `--tally-only` | execute | do not execute; count PASS/FAIL/figures already stored |
+| `-v`, `--verbose` / `-q`, `--quiet` | both | chatty / verdict only |
+
+Exit codes: 0 OK; 1 a FAIL, an error output, an unexecuted cell or an nbconvert
+failure; 2 unknown `--which`. `python -m pytest tests --run-notebooks` re-executes
+every chapter into a temporary directory (needs the kernel).
+
 ## Audit logs
 
 Every `memristec_tools.py` and `upstream_adapter.py` run writes

@@ -154,3 +154,39 @@ withheld-material guard, the vendored conformance checker, the physics of
 each model, the driver, the metrics, the CLI, the health check, the
 cross-check (skipped without a clone) and this documentation (every flag
 above is checked against the parsers).
+
+## 8. The book (`chapters/`)
+
+Six executed chapter notebooks, one per subject, indexed by
+`chapters/README.md`. They are **generated**: the sources are the cell lists
+in `build/partNN_*.py`; `build/assemble.py` writes the notebooks (header with
+table of contents and navigation, the shared setup cell, the chapter's cells,
+a tally cell) and `build/execute.py` runs them on the `memristec-mc` kernel,
+stores the outputs in place and counts the inline `[PASS]`/`[FAIL]` checks.
+Never edit an `.ipynb` by hand — `tests/test_notebooks.py` compares every
+committed notebook with the sources.
+
+```bash
+python build/assemble.py --list            # chapters, parts, cell and figure counts
+python build/assemble.py                   # write every chapter + chapters/README.md
+python build/execute.py -v                 # execute all, in place; logs/execute.log
+python build/execute.py --which 03         # one chapter
+python -m pytest tests --run-notebooks     # re-execute every chapter into a temp dir (slow)
+```
+
+| flag | tool | meaning |
+|---|---|---|
+| `--which KEY` | both | `all` (default), `main`, or one chapter key (`00` … `06`) |
+| `--outdir DIR` | both | assemble: repository root receiving `chapters/`; execute: executed copies under `<outdir>/chapters/` |
+| `--log-dir DIR` | both | audit log directory (default `<outdir>/logs`) |
+| `--list` | assemble | list only, write nothing |
+| `--indir DIR` | execute | repository root holding `chapters/` |
+| `--kernel NAME` | execute | Jupyter kernel (default `memristec-mc`) |
+| `--timeout SEC` | execute | per-cell timeout (default 900) |
+| `--tally-only` | execute | count what is already stored, do not execute |
+| `-v`, `--verbose` / `-q`, `--quiet` | both | chatty / verdict only |
+
+Exit codes: 0 OK; 1 a FAIL, an error output, an unexecuted cell or an
+nbconvert failure; 2 unknown `--which`. Every run appends to
+`logs/assemble.log` or `logs/execute.log` (gitignored). Chapter 6 §24 needs
+`MEMRISTEC_MODEL_LIBRARY` for its cross-check cell and prints `[SKIP]` otherwise.

@@ -6,10 +6,13 @@ SKILL.md points at existing reference files."""
 
 import os
 import re
+import sys
 
 import pytest
 
 from conftest import ROOT
+
+sys.path.insert(0, os.path.join(ROOT, "build"))
 
 
 def _read(*parts):
@@ -21,7 +24,7 @@ def _flags(parser):
     return {s for a in parser._actions for s in a.option_strings if s.startswith("--") and s != "--help"}
 
 
-@pytest.mark.parametrize("module", ["memristec_tools", "upstream_adapter", "verify_memristec"])
+@pytest.mark.parametrize("module", ["memristec_tools", "upstream_adapter", "verify_memristec", "assemble", "execute"])
 def test_script_flags_are_documented(module):
     mod = __import__(module)
     agents, manual = _read("AGENTS.md"), _read("docs", "USER_MANUAL.md")
