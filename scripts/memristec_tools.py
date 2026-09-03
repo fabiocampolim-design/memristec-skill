@@ -8,6 +8,7 @@ Models (references/models.md for the equations and citations):
                      biolek (2009) | prodromakis (2011)
   yakopcic2013       Yakopcic et al. 2011 (EDL) / 2013 (TCAD)
   vteam2015          Kvatinsky et al. 2015 (TCAS-II) — voltage thresholds, rectangular window
+  stanford_pku2016   Jiang et al. 2016 (TED) — filamentary gap with self-heating
 
 Usage:
     python scripts/memristec_tools.py --selftest [--outdir DIR] [--log-dir DIR] [-q]
@@ -41,6 +42,9 @@ def _version():
 
 
 __version__ = _version()
+
+Q_E = 1.602176634e-19      # elementary charge, C
+K_B = 1.380649e-23         # Boltzmann constant, J/K
 
 
 # ------------------------------------------------------------------ stimuli
@@ -249,7 +253,60 @@ class VTEAM2015(Model):
         return rate * w
 
 
-MODELS = {"linear_ion_drift": LinearIonDrift, "yakopcic2013": Yakopcic2013, "vteam2015": VTEAM2015}
+class StanfordPKU2016(Model):
+    """Jiang, Wu, Yu, Yang, Song, Karim, Wong 2016, IEEE TED 63(5), 1884 — Stanford–PKU RRAM model.
+
+    Filamentary VCM device described by the tunnelling gap g in [g_min, g_max];
+    x = (g_max - g)/(g_max - g_min), so x = 1 is the smallest gap (LRS).
+    i     = I0 exp(-g/g0) sinh(v/V0)                                       (paper eq. 1)
+    dg/dt = -nu0 exp(-Ea q/kT) sinh(gamma (a0/t_ox) q v / kT)               (paper eq. 2)
+    gamma = gamma0 - beta (g / 1 nm)^alpha                                   (paper eq. 3, alpha = 3)
+    T     = T0 + |v i| R_th                                                  (paper eq. 4)
+    Both sinh arguments are limited to ±clip_arg (numerical guard only).
+    Ea in eV; g0, a0, t_ox, g_min, g_max in metres; nu0 in m/s; R_th in K/W.
+    Defaults: physical constants of the paper's HfOx set as recalled (to be
+    checked against its Table I); I0, g_min, g_max chosen by us for a clean
+    teaching loop (HRS/LRS ≈ 180 at 0.1 V, V_set ≈ 1.1 V at 1 kHz).
+    """
+
+    name = "stanford_pku2016"
+    defaults = {"I0": 1e-4, "g0": 0.25e-9, "V0": 0.25, "nu0": 10.0, "Ea": 0.6,
+                "a0": 0.25e-9, "t_ox": 12e-9, "gamma0": 16.0, "beta": 0.8, "alpha": 3.0,
+                "T0": 298.0, "R_th": 2.1e3, "g_min": 0.4e-9, "g_max": 1.7e-9,
+                "clip_arg": 40.0, "x0": 0.0}
+
+    def gap(self, x):
+        p = self.params
+        return p["g_max"] - x * (p["g_max"] - p["g_min"])
+
+    def current(self, x, v):
+        p = self.params
+        arg = max(-p["clip_arg"], min(p["clip_arg"], v / p["V0"]))
+        return p["I0"] * math.exp(-self.gap(x) / p["g0"]) * math.sinh(arg)
+
+    def temperature(self, x, v):
+        p = self.params
+        return p["T0"] + abs(v * self.current(x, v)) * p["R_th"]
+
+    def gamma(self, x):
+        p = self.params
+        return p["gamma0"] - p["beta"] * (self.gap(x) / 1e-9) ** p["alpha"]
+
+    def gap_rate(self, x, v):
+        """dg/dt in m/s (negative = the gap closes)."""
+        p = self.params
+        T = self.temperature(x, v)
+        arg = self.gamma(x) * (p["a0"] / p["t_ox"]) * (Q_E * v) / (K_B * T)
+        arg = max(-p["clip_arg"], min(p["clip_arg"], arg))
+        return -p["nu0"] * math.exp(-p["Ea"] * Q_E / (K_B * T)) * math.sinh(arg)
+
+    def state_derivative(self, x, v):
+        p = self.params
+        return -self.gap_rate(x, v) / (p["g_max"] - p["g_min"])
+
+
+MODELS = {"linear_ion_drift": LinearIonDrift, "yakopcic2013": Yakopcic2013,
+          "vteam2015": VTEAM2015, "stanford_pku2016": StanfordPKU2016}
 
 
 def make_model(name, **params):
@@ -412,6 +469,9 @@ def selftest():
         and vt.state_derivative(0.5, 0.6) > 0 > vt.state_derivative(0.5, -0.6))
     res = iv_sweep(vt, 0.6, 1.0, cycles=2, n_per_cycle=2000)
     add("vteam full switching under 0.6 V sine", res.x.min() == 0.0 and res.x.max() == 1.0)
+    sp = StanfordPKU2016()
+    res = iv_sweep(sp, 1.5, 1e3, cycles=1, n_per_cycle=20000)
+    add("stanford_pku bipolar SET/RESET", res.x[5000] == 1.0 and res.x[-1] == 0.0, f"i_max={res.i.max():.2e} A")
     return checks
 
 

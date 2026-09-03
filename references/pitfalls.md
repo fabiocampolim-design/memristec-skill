@@ -43,3 +43,19 @@
    `loop_metrics` masks `|v| < 1 % max|v|` before computing `r_min`/`r_max`
    and the affine-law tests mask `|v| < 0.1 % max|v|` before dividing. Do
    the same in your own analysis.
+
+9. **Stiff filamentary models need a fine grid.** `stanford_pku2016` closes
+   its gap within a few microseconds once the Joule heating kicks in; with
+   the default 2 000 points per period the SET voltage is still right to
+   ~1 mV at 1 kHz, but the RESET branch and the loop area drift. Use 20 000
+   points per period (`n_per_cycle=20000`) and `rk4`; do not use `ivp` for it.
+
+10. **VTEAM's state runs the other way.** In `vteam2015` `x = 0` is `R_on`
+    and a positive voltage above `v_off` *increases* x (RESET); in
+    `linear_ion_drift` and `stanford_pku2016` `x = 1` is the low-resistance
+    state and a positive voltage SETs. Compare conductances, not x, across
+    models.
+
+11. **Loop area is the sum of the lobes.** `loop_metrics["area"]` splits the
+    trajectory at the zero crossings of v; the signed whole-trajectory value
+    (`area_signed`) cancels for a symmetric pinched loop (finding N-2).

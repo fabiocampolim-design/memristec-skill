@@ -162,6 +162,60 @@ the shim converts their `w` (metres, in `[w_on, w_off]`) and rates (m/s) to our
 normalised state; results and tolerances in `tests/records/crosscheck_v1.json`
 (filled in by the cross-check task).
 
+## `stanford_pku2016` — Stanford–PKU RRAM model, Jiang et al. 2016
+
+**Equations** (paper eq. 1–4). State: tunnelling gap `g ∈ [g_min, g_max]`,
+normalised `x = (g_max − g)/(g_max − g_min)` so that `x = 1` is the smallest gap
+(low-resistance state), as for `linear_ion_drift`.
+
+```
+i     = I0 exp(−g/g0) sinh(v/V0)
+dg/dt = −nu0 exp(−Ea q / kT) sinh( gamma (a0/t_ox) q v / kT )
+gamma = gamma0 − beta (g / 1 nm)^alpha            (alpha = 3 in the paper)
+T     = T0 + |v i| R_th
+dx/dt = −(dg/dt) / (g_max − g_min)
+```
+
+A positive voltage closes the gap (SET); the Joule term `|v i| R_th` raises the
+local temperature and accelerates the ion motion, which is why SET is abrupt
+and rate-dependent (V_set ≈ 0.47 V at 1 Hz, 1.08 V at 1 kHz, 1.45 V at 100 kHz
+with the defaults, 20 000 points per period). Both sinh arguments are limited to
+`±clip_arg` — a numerical guard, not part of the paper.
+
+**Citation.** Z. Jiang, Y. Wu, S. Yu, L. Yang, K. Song, Z. Karim, H.-S. P. Wong,
+"A compact model for metal–oxide resistive random access memory with
+experiment verification", *IEEE Trans. Electron Devices* 63(5), 1884–1892
+(2016). doi:10.1109/TED.2016.2545412
+
+**Default parameters** (`StanfordPKU2016.defaults`).
+
+| parameter | default | origin |
+|---|---|---|
+| `g0` | 0.25 nm | paper (HfOx set), as recalled — to check against Table I |
+| `V0` | 0.25 V | same |
+| `nu0` | 10 m/s | same |
+| `Ea` | 0.6 eV | same |
+| `a0` | 0.25 nm | same |
+| `t_ox` | 12 nm | same |
+| `gamma0`, `beta`, `alpha` | 16, 0.8, 3 | same |
+| `T0` | 298 K | same |
+| `R_th` | 2.1e3 K/W | same |
+| `I0` | 1e-4 A | ours (teaching loop; the paper's value is larger) |
+| `g_min`, `g_max` | 0.4 nm, 1.7 nm | ours (HRS/LRS ≈ 180 at 0.1 V) |
+| `clip_arg` | 40 | ours (numerical guard) |
+| `x0` | 0 | ours: start in HRS |
+
+**IP status.** Written from the paper; no upstream code.
+
+**Numerics.** The gap dynamics are stiff near SET: use `n_per_cycle ≥ 20000`
+with `rk4` (`references/pitfalls.md`); `method="ivp"` with the driver's
+`max_step` is ~10× slower and can miss the RESET branch.
+
+**Cross-check.** `tests/test_upstream_crosscheck.py` vs upstream `Stanford_PKU`:
+the shim maps their gap (metres) and their `gamma = gamma0 − beta g^alpha` with
+`g` in metres to our nm-normalised form (`beta_ours = beta (1e-9)^alpha`);
+tolerances in `tests/records/crosscheck_v1.json`.
+
 ## The other upstream folders (planned)
 
 Status vocabulary: **clean-room** = we will write it from the paper;
@@ -176,7 +230,7 @@ re-derive now); **json-only** = upstream has metadata but no code.
 | DataDriven2021 | json gives a dataset DOI (10.5258/SOTON/D0132), no paper; the Southampton data-driven ReRAM model line (Messaris et al., IEEE TCAD 2018, doi:10.1109/TCAD.2018.2791468) is the likely source — to verify | adapter-only until the paper is confirmed |
 | JART_VCM_v1_simplified, JART_VCM_varV1_Simplified | doi:10.1088/2634-4386/ad57e7 (JART VCM simplified, *Neuromorph. Comput. Eng.* 2024) | clean-room (fitting target for the owner's TaOx device) |
 | MEMMEA2025 | doi:10.1002/aelm.202400765 | json-only upstream; clean-room only if the paper states the full equation set |
-| Stanford_PKU | doi:10.1109/TED.2016.2545412 (Jiang et al., Stanford–PKU RRAM model, *IEEE TED* 63(5) 2016) | clean-room (fitting target) |
+| Stanford_PKU | Jiang et al. 2016 (below) | **clean-room** — `stanford_pku2016` (fitting target) |
 | TUD_Schroedter_2022 | doi:10.1109/MOCAST54814.2022.9837726 | adapter-only first (implicit current equation), clean-room after reading the paper |
 | Threshold_Switching_KumarWilliams2017 | doi:10.1038/s41467-017-00773-4 (Kumar & Williams, *Nat. Commun.* 8, 658, 2017) | clean-room (thermal threshold switch) |
 | Threshold_Switching_KumarWilliams_Simplified2020 | doi:10.1109/ISCAS45731.2020.9181036 | clean-room |
