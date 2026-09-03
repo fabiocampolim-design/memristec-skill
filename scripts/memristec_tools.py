@@ -12,6 +12,7 @@ Usage:
     python scripts/memristec_tools.py --selftest [--outdir DIR] [--log-dir DIR] [-q]
     python scripts/memristec_tools.py --model linear_ion_drift --stimulus sin --amplitude 1.2 --frequency 1 --cycles 2
     python scripts/memristec_tools.py --version
+    (Python) pulse_response(model, amplitude, width, period, n_pulses)   # SKILL.md workflow 7
 Exit code 0 on success, 1 on a failed check, 2 on usage error.
 """
 
@@ -60,6 +61,16 @@ def rectangular(t, amplitude, frequency, duty=0.5):
     t = np.asarray(t, dtype=float)
     period = 1.0 / frequency
     return np.where((t % period) < duty * period, amplitude, -amplitude)
+
+
+def pulse_train(t, amplitude, width, period, n_pulses, t0=0.0, baseline=0.0):
+    """n_pulses rectangular pulses of height `amplitude` and duration `width`,
+    one per `period`, starting at t0; `baseline` elsewhere (the read level)."""
+    t = np.asarray(t, dtype=float)
+    tt = t - t0
+    k = np.floor(tt / period)
+    on = (tt >= 0.0) & (k < n_pulses) & ((tt - k * period) < width)
+    return np.where(on, amplitude, baseline)
 
 
 STIMULI = {"sin": sine, "triangular": triangular, "rectangular": rectangular}
@@ -270,22 +281,39 @@ def iv_sweep(model, amplitude, frequency, cycles=1, n_per_cycle=2000, stimulus="
     return simulate(model, t, v, method=method)
 
 
+def _lobe_area(v, i):
+    """Sum of |area| of the lobes of the (v, i) trajectory, one lobe per sign of v."""
+    sign = np.sign(v)
+    sign[sign == 0] = 1
+    cuts = np.flatnonzero(np.diff(sign) != 0) + 1
+    total = 0.0
+    for a, b in zip(np.r_[0, cuts], np.r_[cuts, len(v)]):
+        vv, ii = v[a:b], i[a:b]
+        if len(vv) < 3:
+            continue
+        total += 0.5 * abs(np.sum(vv[:-1] * ii[1:] - vv[1:] * ii[:-1]) + (vv[-1] * ii[0] - vv[0] * ii[-1]))
+    return float(total)
+
+
 def loop_metrics(res):
     """Pinched-hysteresis descriptors of an I-V trajectory.
 
-    area: |closed-loop area| in the (v, i) plane by the shoelace formula over
-    the whole trajectory (0 for a resistor); pinched_at_origin: |i| < 1e-3 *
-    max|i| wherever |v| < 1e-3 * max|v|; r_min/r_max: min/max of v/i where
-    |v| > 1e-2 * max|v|.
+    area: sum of the |areas| of the loop's lobes (the trajectory is split where
+    v changes sign and each lobe is closed on itself), so a symmetric pinched
+    loop counts both lobes; area_signed: the signed shoelace area of the whole
+    trajectory (the two lobes of a pinched loop cancel — kept for reference);
+    pinched_at_origin: |i| < 1e-3 * max|i| wherever |v| < 1e-3 * max|v|;
+    r_min/r_max: min/max of v/i where |v| > 1e-2 * max|v|.
     """
     v, i = res.v, res.i
-    area = 0.5 * abs(float(np.sum(v[:-1] * i[1:] - v[1:] * i[:-1])))
+    area_signed = 0.5 * float(np.sum(v[:-1] * i[1:] - v[1:] * i[:-1]))
     vmax, imax = np.max(np.abs(v)), np.max(np.abs(i))
     near0 = np.abs(v) < 1e-3 * vmax
     pinched = bool(np.all(np.abs(i[near0]) <= 1e-3 * imax)) if imax > 0 else True
     mask = np.abs(v) > 1e-2 * vmax
     r = v[mask] / i[mask] if np.any(mask) and np.all(i[mask] != 0) else np.array([np.inf])
-    return {"area": area, "i_max": float(i.max()), "i_min": float(i.min()),
+    return {"area": _lobe_area(v, i), "area_signed": area_signed,
+            "i_max": float(i.max()), "i_min": float(i.min()),
             "pinched_at_origin": pinched, "r_min": float(r.min()), "r_max": float(r.max())}
 
 
@@ -294,6 +322,24 @@ def dynamic_route_map(model, x_grid, v_values):
     x_grid = np.asarray(x_grid, dtype=float)
     return {float(v): np.array([model.state_derivative(float(x), float(v)) for x in x_grid])
             for v in v_values}
+
+
+def pulse_response(model, amplitude, width, period, n_pulses, read_voltage=0.1,
+                   n_per_period=400, method="rk4"):
+    """Drive `model` with a pulse train and read the state after every pulse.
+
+    Returns {t, v, x, i (grid arrays), x_after (n_pulses,), G_after (n_pulses,)}:
+    x_after[k] is the state at the end of period k, G_after[k] the read
+    conductance model.current(x_after[k], read_voltage) / read_voltage.
+    """
+    n = int(n_pulses * n_per_period) + 1
+    t = np.linspace(0.0, n_pulses * period, n)
+    v = pulse_train(t, amplitude, width, period, n_pulses)
+    res = simulate(model, t, v, method=method)
+    idx = np.array([min(n - 1, (k + 1) * n_per_period) for k in range(n_pulses)])
+    x_after = res.x[idx]
+    g_after = np.array([model.current(float(x), read_voltage) / read_voltage for x in x_after])
+    return {"t": t, "v": v, "x": res.x, "i": res.i, "x_after": x_after, "G_after": g_after}
 
 
 # ------------------------------------------------------------------ CLI

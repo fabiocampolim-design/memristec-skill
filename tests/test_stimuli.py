@@ -2,7 +2,7 @@
 # Copyright 2026 Fabio Campolim
 import numpy as np
 
-from memristec_tools import STIMULI, rectangular, sine, triangular
+from memristec_tools import STIMULI, pulse_train, rectangular, sine, triangular
 
 
 def test_sine_amplitude_and_period():
@@ -29,3 +29,19 @@ def test_rectangular_levels_and_duty():
 
 def test_registry_names():
     assert set(STIMULI) == {"sin", "triangular", "rectangular"}
+
+
+def test_pulse_train_levels_count_and_timing():
+    t = np.linspace(0.0, 1.0, 10001)                      # dt = 1e-4
+    v = pulse_train(t, 0.5, width=0.02, period=0.05, n_pulses=10)
+    assert set(np.unique(v)) == {0.0, 0.5}
+    on = v > 0
+    assert abs(on.sum() - 2000) <= 20                      # 10 x 20 ms high, ±1 sample per edge
+    assert v[0] == 0.5 and v[int(0.03 / 1e-4)] == 0.0 and v[int(0.05 / 1e-4)] == 0.5
+    assert not on[int(0.5 / 1e-4) + 5:].any()             # nothing after the 10th period
+
+
+def test_pulse_train_offset_and_baseline():
+    t = np.linspace(0.0, 1.0, 1001)
+    v = pulse_train(t, -1.0, width=0.1, period=0.2, n_pulses=2, t0=0.3, baseline=0.05)
+    assert v[0] == 0.05 and v[300] == -1.0 and v[450] == 0.05 and v[500] == -1.0 and v[800] == 0.05
