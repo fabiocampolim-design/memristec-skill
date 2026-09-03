@@ -124,6 +124,44 @@ clone `f13423f`). Note the upstream `simulate()` ignores its `V` argument
 (finding **P-2**); the cross-check therefore drives *both* derivative
 fields with our `simulate`.
 
+## `vteam2015` — VTEAM, Kvatinsky et al. 2015
+
+**Equations** (paper eq. 1–3; normalised state `x = (w − w_on)/(w_off − w_on)`, so
+`x = 0` is `R_on` and `x = 1` is `R_off` — note the opposite convention to
+`linear_ion_drift`):
+
+```
+dx/dt = k_off (v/v_off − 1)^alpha_off f(x)     v > v_off > 0      (RESET direction)
+      = k_on  (v/v_on  − 1)^alpha_on  f(x)     v < v_on  < 0      (SET direction)
+      = 0                                      v_on ≤ v ≤ v_off  (dead band)
+i     = v / [R_on + (R_off − R_on) x]
+```
+
+`f(x)` is the rectangular window (`window=1`: 1 inside (0, 1), 0 at the ends,
+with a rate pointing inward always allowed so the state can leave a boundary;
+`window=0`: f = 1 and the driver's clip bounds the state). `k_on < 0`, `k_off > 0`
+are rates of the normalised state in 1/s (the paper's m/s divided by
+`w_off − w_on`). The paper's exponential resistance dependence (its eq. 4) is not
+implemented.
+
+**Citation.** S. Kvatinsky, M. Ramadan, E. G. Friedman, A. Kolodny, "VTEAM: a
+general model for voltage-controlled memristors", *IEEE Trans. Circuits Syst.
+II* 62(8), 786–790 (2015). doi:10.1109/TCSII.2015.2433536
+
+**Default parameters** (`VTEAM2015.defaults`) — all **ours, illustrative** (a
+device that switches fully in ~0.1 s at twice its threshold): `R_on = 1 kΩ`,
+`R_off = 100 kΩ`, `v_on = −0.3 V`, `v_off = 0.3 V`, `k_on = −10 s⁻¹`,
+`k_off = 10 s⁻¹`, `alpha_on = alpha_off = 3`, `window = 1`, `x0 = 0.5`. The
+paper's fitted sets (its Table I) are to be checked against the paper, which is
+not in the study repo yet.
+
+**IP status.** Written from the paper; no upstream code.
+
+**Cross-check.** `tests/test_upstream_crosscheck.py` vs upstream `VTEAM2015`:
+the shim converts their `w` (metres, in `[w_on, w_off]`) and rates (m/s) to our
+normalised state; results and tolerances in `tests/records/crosscheck_v1.json`
+(filled in by the cross-check task).
+
 ## The other upstream folders (planned)
 
 Status vocabulary: **clean-room** = we will write it from the paper;
@@ -145,7 +183,7 @@ re-derive now); **json-only** = upstream has metadata but no code.
 | Threshold_Switching_Pershin2013 | no DOI in the json; paper to identify | adapter-only |
 | Threshold_Switching_PickettWilliams2012 | doi:10.1088/0957-4484/23/21/215202 (Pickett & Williams, *Nanotechnology* 23, 215202, 2012) | json-only upstream; clean-room from the paper |
 | Threshold_Switching_PickettWilliams_Simplified2022 | doi:10.35848/1347-4065/ac8489 | clean-room |
-| VTEAM2015 | doi:10.1109/TCSII.2015.2433536 (Kvatinsky et al., *IEEE TCAS-II* 62(8), 786, 2015) | clean-room |
+| VTEAM2015 | Kvatinsky et al. 2015 (below) | **clean-room** — `vteam2015` |
 
 The per-model decision is recorded here when it is taken; a model with no
 paper stays adapter-only.

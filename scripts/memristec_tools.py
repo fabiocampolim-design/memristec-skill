@@ -7,6 +7,7 @@ Models (references/models.md for the equations and citations):
   linear_ion_drift   Strukov et al. 2008 with a window: none | joglekar (2009) |
                      biolek (2009) | prodromakis (2011)
   yakopcic2013       Yakopcic et al. 2011 (EDL) / 2013 (TCAD)
+  vteam2015          Kvatinsky et al. 2015 (TCAS-II) — voltage thresholds, rectangular window
 
 Usage:
     python scripts/memristec_tools.py --selftest [--outdir DIR] [--log-dir DIR] [-q]
@@ -202,7 +203,53 @@ class Yakopcic2013(Model):
         return self.params["eta"] * self.g(v) * self.f(x, v)
 
 
-MODELS = {"linear_ion_drift": LinearIonDrift, "yakopcic2013": Yakopcic2013}
+class VTEAM2015(Model):
+    """Kvatinsky, Ramadan, Friedman, Kolodny 2015, IEEE TCAS-II 62(8), 786 — VTEAM.
+
+    x = (w - w_on)/(w_off - w_on) in [0, 1]; x = 0 is R_on, x = 1 is R_off.
+    dx/dt = k_off (v/v_off - 1)^alpha_off f(x)   v > v_off > 0     (paper eq. 1)
+          = k_on  (v/v_on  - 1)^alpha_on  f(x)   v < v_on  < 0
+          = 0                                    otherwise
+    i     = v / (R_on + (R_off - R_on) x)                             (paper eq. 3)
+    f(x): window=1 -> rectangular (1 for 0 < x < 1, 0 at the ends, but a
+    rate pointing inward is let through so the state can leave a boundary);
+    window=0 -> f = 1 (the driver's clip bounds the state).
+    k_on < 0 and k_off > 0 are rates of the normalised state in 1/s (the
+    paper's m/s divided by w_off - w_on). Defaults are illustrative (ours).
+    """
+
+    name = "vteam2015"
+    defaults = {"R_on": 1e3, "R_off": 1e5, "v_on": -0.3, "v_off": 0.3,
+                "k_on": -10.0, "k_off": 10.0, "alpha_on": 3.0, "alpha_off": 3.0,
+                "window": 1, "x0": 0.5}
+
+    def resistance(self, x):
+        p = self.params
+        return p["R_on"] + (p["R_off"] - p["R_on"]) * x
+
+    def current(self, x, v):
+        return v / self.resistance(x)
+
+    def window_value(self, x):
+        if self.params["window"] == 0:
+            return 1.0
+        return 1.0 if 0.0 < x < 1.0 else 0.0
+
+    def state_derivative(self, x, v):
+        p = self.params
+        if v > p["v_off"] > 0.0:
+            rate = p["k_off"] * (v / p["v_off"] - 1.0) ** p["alpha_off"]
+        elif v < p["v_on"] < 0.0:
+            rate = p["k_on"] * (v / p["v_on"] - 1.0) ** p["alpha_on"]
+        else:
+            return 0.0
+        w = self.window_value(x)
+        if w == 0.0 and ((x <= 0.0 and rate > 0.0) or (x >= 1.0 and rate < 0.0)):
+            return rate                      # leaving a boundary inward is always allowed
+        return rate * w
+
+
+MODELS = {"linear_ion_drift": LinearIonDrift, "yakopcic2013": Yakopcic2013, "vteam2015": VTEAM2015}
 
 
 def make_model(name, **params):
@@ -360,6 +407,11 @@ def selftest():
     add("yakopcic no motion below threshold", y.state_derivative(0.5, 0.1) == 0.0 and y.state_derivative(0.5, 1.0) > 0)
     res = iv_sweep(y, 1.0, 1.0, cycles=1, n_per_cycle=2000)
     add("yakopcic switches and stays bounded", res.x.max() > y.x0 and 0 <= res.x.min() and res.x.max() <= 1)
+    vt = VTEAM2015()
+    add("vteam dead band between thresholds", vt.state_derivative(0.5, 0.2) == 0.0 and vt.state_derivative(0.5, -0.2) == 0.0
+        and vt.state_derivative(0.5, 0.6) > 0 > vt.state_derivative(0.5, -0.6))
+    res = iv_sweep(vt, 0.6, 1.0, cycles=2, n_per_cycle=2000)
+    add("vteam full switching under 0.6 V sine", res.x.min() == 0.0 and res.x.max() == 1.0)
     return checks
 
 
