@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.5 -- 2026-09-04
+
+- Vendored conformance checker resynced to 1.6.2 (rules 28-30 in its table, the rule-16
+  citation check reads the VERSION file); no behaviour change in the toolkit.
+
 ## 0.2.4 -- 2026-09-04
 
 - `references/taxonomy.md`: the seven-column device-class table, which GitHub squeezed
