@@ -32,7 +32,7 @@ import re
 import subprocess
 import sys
 
-VERSION = "1.5.1"
+VERSION = "1.6.1"
 
 TEXT_EXT = {".py", ".md", ".ipynb", ".txt", ".yml", ".yaml", ".json", ".ps1",
             ".bib", ".cff", ".toml", ".cfg", ".ini", ".bat", ".sh", ".html",
@@ -125,6 +125,9 @@ DEFAULT_RULES = [
     dict(id=26, title="Community pathways: CONTRIBUTING.md, CODE_OF_CONDUCT.md and "
                       "docs/DESIGN.md (the design trade-offs) in every repo",
          applies="all", check="auto", check_ids=["community-files"]),
+    dict(id=27, title="Dependabot alerts enabled on every published repo, from the day "
+                      "it goes public (gh api repos/<o>/<r>/dependabot/alerts)",
+         applies="all", check="manual", check_ids=[]),
 ]
 
 
@@ -365,6 +368,40 @@ def chk_changelog(repo, ctx):
     return "FAIL", "no CHANGELOG.md (rule 16)"
 
 
+VERSION_LINE = re.compile(r'(?m)^\s*version\s*=\s*["\']([^"\']+)["\']')
+DUNDER_VERSION = re.compile(r'(?m)^__version__\s*=\s*["\']([^"\']+)["\']')
+VENDORED_NAME = "conformance.py"   # this checker, vendored into a repo
+CONST_VERSION = re.compile(r'(?m)^VERSION\s*=\s*["\']([^"\']+)["\']')
+CITED_VERSION = re.compile(r'(?m)^version:\s*["\']?([^"\'\s]+)')
+
+
+def _package_version(repo):
+    """The version the project declares machine-readably: pyproject
+    `[project] version`, else the shallowest package `__version__`.
+    None when it declares none — then there is nothing to compare."""
+    m = VERSION_LINE.search(read_text(repo, "pyproject.toml") or "")
+    if m:
+        return m.group(1)
+    depth = lambda f: f.replace(chr(92), "/").count("/")            # noqa: E731
+    pys = [f for f in tracked_files(repo) if f.endswith(".py")]
+    for rel in sorted((f for f in pys
+                       if os.path.basename(f) == "__init__.py"),
+                      key=lambda f: (depth(f), f)):
+        m = DUNDER_VERSION.search(read_text(repo, rel) or "")
+        if m:
+            return m.group(1)
+    # A bare `VERSION = "x"` is the project's only when it sits in a
+    # top-level script: a VENDORED checker carries its own (PDFEXTRACT and
+    # PRACTICALMETEOROLOGY vendor conformance.py under tests/, 2026-09-04).
+    for rel in sorted((f for f in pys if depth(f) == 0
+                       and os.path.basename(f) != VENDORED_NAME),
+                      key=lambda f: f):
+        m = CONST_VERSION.search(read_text(repo, rel) or "")
+        if m:
+            return m.group(1)
+    return None
+
+
 def chk_citation(repo, ctx):
     p = os.path.join(repo, "CITATION.cff")
     if not os.path.isfile(p):
@@ -373,7 +410,17 @@ def chk_citation(repo, ctx):
     missing = [k for k in ("version", "license") if k + ":" not in text]
     if missing:
         return "FAIL", "CITATION.cff missing field(s): " + ", ".join(missing)
-    return "PASS", "CITATION.cff with version + license"
+    # A citation left at an old version cites software nobody can get:
+    # CLAUDIU's sat at 0.1.0 through its whole 0.2 line because nothing
+    # compared the two (2026-09-04).
+    declared = _package_version(repo)
+    m = CITED_VERSION.search(text)
+    cited = m.group(1) if m else None
+    if declared and cited and cited != declared:
+        return "FAIL", ("CITATION.cff cites %s but the package declares %s "
+                        "(rule 16)" % (cited, declared))
+    return "PASS", "CITATION.cff with version + license" + (
+        " (== %s)" % declared if declared else "")
 
 
 def _license_text(repo):
