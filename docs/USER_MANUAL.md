@@ -205,6 +205,22 @@ nbconvert failure; 2 unknown `--which`. Every run appends to
 `logs/assemble.log` or `logs/execute.log` (gitignored). Chapter 6 §24 needs
 `MEMRISTEC_MODEL_LIBRARY` for its cross-check cell and prints `[SKIP]` otherwise.
 
+## 8a. This manual as HTML or PDF
+
+```bash
+python docs/build_manual.py                 # docs/USER_MANUAL.html (+ .pdf with pandoc and xelatex/lualatex)
+python docs/build_manual.py --outdir out/ --no-pdf -v
+```
+
+| flag | meaning |
+|---|---|
+| `--outdir DIR` | where `USER_MANUAL.html` / `.pdf` go (default `docs/`) |
+| `--no-pdf` | write the HTML only |
+| `-v`, `--verbose` | print the converter used and the commands |
+
+Without pandoc a built-in converter writes the HTML and the PDF is skipped with
+a notice; exit 1 when pandoc or the PDF engine fails.
+
 ## 9. Watch the upstream library weekly
 
 The MemrisTec GitLab sits behind a bot wall, so the watch works on your local

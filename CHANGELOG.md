@@ -9,6 +9,8 @@
   the MemrisTec Model Library -- fetches, lists new commits per branch and changed model
   folders since the previous run, writes `docs/watch/YYYY-WW.md`; `scripts/register_watch_task.ps1`
   schedules it on Windows.
+- `docs/build_manual.py` renders the manual to HTML (and PDF with pandoc + a LaTeX
+  engine); rule 10 parity with the sibling skills.
 
 ## 0.2.1 — 2026-09-04
 

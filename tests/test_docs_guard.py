@@ -13,6 +13,7 @@ import pytest
 from conftest import ROOT
 
 sys.path.insert(0, os.path.join(ROOT, "build"))
+sys.path.insert(0, os.path.join(ROOT, "docs"))
 
 
 def _read(*parts):
@@ -24,7 +25,17 @@ def _flags(parser):
     return {s for a in parser._actions for s in a.option_strings if s.startswith("--") and s != "--help"}
 
 
-@pytest.mark.parametrize("module", ["memristec_tools", "upstream_adapter", "verify_memristec", "watch_upstream", "assemble", "execute"])
+def test_build_manual_writes_html_without_pandoc(tmp_path, monkeypatch):
+    """Rule 10: the manual builds from the Markdown even on a machine without pandoc."""
+    import build_manual
+    monkeypatch.setattr(build_manual.shutil, "which", lambda name: None)
+    assert build_manual.main(["--outdir", str(tmp_path), "--no-pdf"]) == 0
+    out = (tmp_path / "USER_MANUAL.html").read_text(encoding="utf-8")
+    assert "<title>memristec-skill" in out and "<h2>" in out and "<table>" in out
+    assert "scripts/watch_upstream.py" in out                   # the manual's own content came through
+
+
+@pytest.mark.parametrize("module", ["memristec_tools", "upstream_adapter", "verify_memristec", "watch_upstream", "assemble", "execute", "build_manual"])
 def test_script_flags_are_documented(module):
     mod = __import__(module)
     agents, manual = _read("AGENTS.md"), _read("docs", "USER_MANUAL.md")

@@ -77,6 +77,19 @@ Exit codes: 0 every comparison within tolerance, 1 a comparison exceeded
 Exit codes: 0 all checks passed, 1 otherwise. Without a library the fifth
 check prints `[SKIP] upstream cross-check`.
 
+## `docs/build_manual.py` — the manual as HTML / PDF (rule 10)
+
+`docs/USER_MANUAL.md` is the source; the outputs are not tracked.
+
+| flag | meaning |
+|---|---|
+| `--outdir DIR` | where `USER_MANUAL.html` / `.pdf` go (default `docs/`) |
+| `--no-pdf` | write the HTML only |
+| `-v`, `--verbose` | print the converter used and the commands |
+
+Uses pandoc (+ xelatex / lualatex for the PDF) when on PATH, else a built-in Markdown
+subset converter for the HTML and no PDF. Exit 0 OK, 1 pandoc or the engine failed.
+
 ## `scripts/watch_upstream.py` — the weekly upstream watch (rule 23 / S8)
 
 Works on a local clone (the library's GitLab is behind a bot wall; `git` gets through):
