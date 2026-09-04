@@ -41,6 +41,18 @@ def test_pulse_train_levels_count_and_timing():
     assert not on[int(0.5 / 1e-4) + 5:].any()             # nothing after the 10th period
 
 
+def test_pulse_train_edges_are_consistent_on_an_exact_grid():
+    """Every pulse of a train whose edges fall on grid points has the same
+    number of samples (chapter 5 §18: round-off in t/period used to move an
+    edge by one sample for some pulses only, so identical pulses moved the
+    state by different amounts)."""
+    t = np.linspace(0.0, 1.2, 24001)                      # dt = 5e-5; 0.02 / dt = 400 exactly
+    v = pulse_train(t, -0.5, width=0.01, period=0.02, n_pulses=60)
+    per_pulse = [int(np.sum(v[k * 400:(k + 1) * 400] != 0.0)) for k in range(60)]
+    assert per_pulse == [200] * 60, sorted(set(per_pulse))
+    assert v[0] != 0.0 and v[200] == 0.0 and v[400] != 0.0     # on at k*period, off at k*period + width
+
+
 def test_pulse_train_offset_and_baseline():
     t = np.linspace(0.0, 1.0, 1001)
     v = pulse_train(t, -1.0, width=0.1, period=0.2, n_pulses=2, t0=0.3, baseline=0.05)

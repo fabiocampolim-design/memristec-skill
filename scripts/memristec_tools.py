@@ -70,11 +70,22 @@ def rectangular(t, amplitude, frequency, duty=0.5):
 
 def pulse_train(t, amplitude, width, period, n_pulses, t0=0.0, baseline=0.0):
     """n_pulses rectangular pulses of height `amplitude` and duration `width`,
-    one per `period`, starting at t0; `baseline` elsewhere (the read level)."""
+    one per `period`, starting at t0; `baseline` elsewhere (the read level).
+
+    Edges are resolved with a tolerance of 1e-9 period so that a grid point
+    lying exactly on an edge is classified the same way for every pulse: a
+    sample at t0 + k*period is the first `on` sample of pulse k, a sample at
+    t0 + k*period + width is the first `off` sample (without the tolerance,
+    round-off in `tt / period` moved an edge by one sample for some pulses
+    and not for others, and identical pulses moved the state by different
+    amounts — chapter 5 §18).
+    """
     t = np.asarray(t, dtype=float)
     tt = t - t0
-    k = np.floor(tt / period)
-    on = (tt >= 0.0) & (k < n_pulses) & ((tt - k * period) < width)
+    eps = 1e-9 * period
+    k = np.floor((tt + eps) / period)
+    phase = tt - k * period
+    on = (tt >= -eps) & (k < n_pulses) & (phase < width - eps)
     return np.where(on, amplitude, baseline)
 
 

@@ -7,6 +7,8 @@
   ~0 for a symmetric pinched loop (finding N-2), is kept as `area_signed`.
 - `pulse_train` stimulus and `pulse_response` (state and read conductance after
   each pulse) for potentiation / depression studies.
+  Pulse edges are resolved with a tolerance of 1e-9 period, so a grid point on an
+  edge is classified the same way for every pulse (finding N-8).
 - Clean-room models `vteam2015` (Kvatinsky et al. 2015) and `stanford_pku2016`
   (Jiang et al. 2016) with tests; adapter shims and cross-checks for the upstream
   `VTEAM2015` and `Stanford_PKU` folders (finding P-6: the Stanford runner calls

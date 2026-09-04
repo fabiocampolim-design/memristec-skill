@@ -59,3 +59,14 @@
 11. **Loop area is the sum of the lobes.** `loop_metrics["area"]` splits the
     trajectory at the zero crossings of v; the signed whole-trajectory value
     (`area_signed`) cancels for a symmetric pinched loop (finding N-2).
+
+12. **Pulse edges lose most of a grid step.** The fixed-step RK4 driver
+    interpolates the stimulus at the half step; across a pulse edge that
+    interpolated voltage is half the pulse height, which for a threshold model
+    sits inside the dead band. Each edge therefore integrates only 1/6 of a
+    step (the `k1` or `k4` stage alone), so the first pulse of a train, the
+    later ones and a pulse that runs into a boundary all move the state by
+    slightly different amounts (~0.1 % at 400 points per period). Compare
+    pulses from the second one on, exclude the clipped one, and quote
+    per-pulse steps to 1 % — or align the grid so that a pulse edge falls on
+    a grid point and refine it (chapter 5 §18 and exercise 5.1).
