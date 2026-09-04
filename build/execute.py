@@ -88,7 +88,8 @@ def run_nbconvert(src, dst, kernel, timeout, log_dir):
     cmd = [sys.executable, "-m", "nbconvert", "--to", "notebook", "--execute",
            "--inplace", dst, f"--ExecutePreprocessor.kernel_name={kernel}",
            f"--ExecutePreprocessor.timeout={timeout}"]
-    env = dict(os.environ, PYTHONIOENCODING="utf-8")
+    # a copy executed under --outdir finds the toolkit through this variable (setup cell)
+    env = dict(os.environ, PYTHONIOENCODING="utf-8", MEMRISTEC_SKILL_ROOT=ROOT)
     logfile = os.path.join(log_dir, f"nbconvert-{os.path.basename(dst)}.log")
     with open(logfile, "w", encoding="utf-8") as lf:
         proc = subprocess.run(cmd, cwd=os.path.dirname(os.path.abspath(dst)) or ".",

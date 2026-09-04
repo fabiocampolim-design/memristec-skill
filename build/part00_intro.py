@@ -79,8 +79,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from IPython.display import display, HTML
 
-# the toolkit lives in scripts/ at the repository root (chapters/ is one level down)
-for _cand in ("scripts", os.path.join("..", "scripts")):
+# the toolkit lives in scripts/ at the repository root (chapters/ is one level down);
+# build/execute.py --outdir runs a copy elsewhere and names the root in MEMRISTEC_SKILL_ROOT
+for _cand in ("scripts", os.path.join("..", "scripts"),
+              os.path.join(os.environ.get("MEMRISTEC_SKILL_ROOT", ""), "scripts")):
     if os.path.isfile(os.path.join(_cand, "memristec_tools.py")):
         sys.path.insert(0, os.path.abspath(_cand))
         break

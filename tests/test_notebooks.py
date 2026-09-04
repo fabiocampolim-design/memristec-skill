@@ -28,7 +28,7 @@ from nbbuild import make_cell  # noqa: E402
 KEYS = [c.key for c in CHAPTERS]
 PATHS = outputs(ROOT)
 COMMITTED = [k for k in KEYS if os.path.exists(PATHS[k])]     # chapters land one task at a time
-EXPECTED = {"cells": 68, "pass": 70, "figures": 21}           # raised by every chapter task
+EXPECTED = {"cells": 85, "pass": 84, "figures": 25}           # the complete book (0.2.0)
 MAX_NOTEBOOK_BYTES = 1_500_000
 TARGET_NOTEBOOK_BYTES = 1_000_000
 
@@ -47,9 +47,17 @@ def kernel_available(name="memristec-mc"):
         return False
 
 
-def test_every_planned_chapter_is_committed_once_the_book_is_complete():
+def test_every_planned_chapter_is_committed():
+    """The book is complete since 0.2.0: every chapter of assemble.CHAPTERS has
+    its executed notebook. (While the book was being written, chapter by
+    chapter, this test compared against the chapters whose build/partNN
+    source existed — assemble.present() — so that every intermediate commit
+    was green without an environment switch; finding N-4.)"""
+    from assemble import present
+    sourced = [c.key for c in present()]
+    assert sourced == KEYS, f"chapters without a build/partNN source: {sorted(set(KEYS) - set(sourced))}"
     missing = [k for k in KEYS if k not in COMMITTED]
-    assert not missing or os.environ.get("MEMRISTEC_BOOK_IN_PROGRESS"), f"missing chapters {missing}"
+    assert not missing, f"missing chapters {missing}"
 
 
 @pytest.mark.parametrize("key", COMMITTED)
