@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this skill, please cite it as below, and cite the model papers listed in references/models.md."
 title: "memristec-skill: an AI-agent skill, verified toolkit and course on compact memristor models (MemrisTec Model Platform)"
 type: software
-version: "0.2.3"
+version: "0.2.4"
 date-released: "2026-09-04"
 license: Apache-2.0
 authors:

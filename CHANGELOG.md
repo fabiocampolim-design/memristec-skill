@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.4 -- 2026-09-04
+
+- `references/taxonomy.md`: the seven-column device-class table, which GitHub squeezed
+  until its last column was unreadable, is now two tables (mechanism / switching / stack,
+  and class -> model families). Repository public since 2026-09-04.
+
 ## 0.2.3 -- 2026-09-04
 
 - `watch_upstream.py` audit-log names carry microseconds: two runs of one process within the

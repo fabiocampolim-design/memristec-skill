@@ -7,15 +7,28 @@ the model column names this toolkit's clean-room models and the library folders.
 
 ## 1. Device classes (by switching mechanism)
 
-| class (`physics`) | what moves | `switchingType` | `switchingGeometry` | `volatility` | typical stack | models that describe it |
-|---|---|---|---|---|---|---|
-| **Valence change memory (VCM)** | oxygen vacancies form / dissolve a conductive filament (or modulate an interface) in a transition-metal oxide | bipolar | filamentary (also area-dependent in interface-type cells) | non-volatile | Pt/TaOx/Ta, TiN/HfOx/Ti, W/TaOx/W | `stanford_pku2016` (gap-based, self-heating); upstream `JART_VCM_*` (Schottky + plug/disc, planned); phenomenologically `vteam2015`, `yakopcic2013`; the linear-ion-drift family as the historical TiO₂ picture |
-| **Electrochemical metallization (ECM, CBRAM)** | metal cations (Ag, Cu) from an active electrode form a metallic filament | bipolar | filamentary | non-volatile (thin filaments can be volatile: diffusive memristors) | Ag/SiO₂/Pt, Cu/GeS/W | no library folder yet; `vteam2015` / `yakopcic2013` as phenomenological fits |
-| **Thermochemical memory (TCM)** | Joule heating drives a redox reaction; the filament ruptures thermally | unipolar | filamentary | non-volatile | Pt/NiO/Pt | none shipped; a thermal model (temperature state) is required |
-| **Phase change memory (PCM)** | crystalline ↔ amorphous phase of a chalcogenide, set by melt-quench | unipolar (current-driven) | volume | non-volatile, drifts | Ge₂Sb₂Te₅ | outside this toolkit's single-state ODE (needs a thermal + crystallisation state) |
-| **Threshold switches (Mott / thermal, e.g. NbO₂, VO₂)** | temperature-driven insulator–metal transition; the state is the temperature | current-controlled NDR | filamentary | **volatile** (relaxes when the current stops) | Pt/NbO₂/Pt | upstream `Threshold_Switching_KumarWilliams*`, `…PickettWilliams*` (adapter-only for now); `Threshold_Switching_Pershin2013` (voltage thresholds, non-thermal) |
-| **Interface / area-dependent** | uniform modulation of a Schottky or tunnel barrier over the whole area (a VCM sub-type) | bipolar | area-dependent | non-volatile, analogue | Pr₀.₇Ca₀.₃MnO₃, TaOx interface cells | no dedicated folder; the linear-ion-drift family (state = doped fraction of a uniform film) is closest in spirit |
-| **Data-driven** | not a mechanism: an interpolation of measured transitions | as measured | as measured | as measured | Southampton dataset (`doi:10.5258/SOTON/D0132`) | upstream `DataDriven2021` (adapter-only) |
+| class (`physics`) | what moves | switching: type · geometry · volatility | typical stack |
+|---|---|---|---|
+| **Valence change memory (VCM)** | oxygen vacancies form / dissolve a conductive filament (or modulate an interface) in a transition-metal oxide | bipolar · filamentary (also area-dependent in interface-type cells) · non-volatile | Pt/TaOx/Ta, TiN/HfOx/Ti, W/TaOx/W |
+| **Electrochemical metallization (ECM, CBRAM)** | metal cations (Ag, Cu) from an active electrode form a metallic filament | bipolar · filamentary · non-volatile (thin filaments can be volatile: diffusive memristors) | Ag/SiO₂/Pt, Cu/GeS/W |
+| **Thermochemical memory (TCM)** | Joule heating drives a redox reaction; the filament ruptures thermally | unipolar · filamentary · non-volatile | Pt/NiO/Pt |
+| **Phase change memory (PCM)** | crystalline ↔ amorphous phase of a chalcogenide, set by melt-quench | unipolar (current-driven) · volume · non-volatile, drifts | Ge₂Sb₂Te₅ |
+| **Threshold switches (Mott / thermal, e.g. NbO₂, VO₂)** | temperature-driven insulator–metal transition; the state is the temperature | current-controlled NDR · filamentary · **volatile** (relaxes when the current stops) | Pt/NbO₂/Pt |
+| **Interface / area-dependent** | uniform modulation of a Schottky or tunnel barrier over the whole area (a VCM sub-type) | bipolar · area-dependent · non-volatile, analogue | Pr₀.₇Ca₀.₃MnO₃, TaOx interface cells |
+| **Data-driven** | not a mechanism: an interpolation of measured transitions | as measured · as measured · as measured | Southampton dataset (`doi:10.5258/SOTON/D0132`) |
+
+Which model family describes each class (details in §2):
+
+| class | models that describe it |
+|---|---|
+| Valence change memory (VCM) | `stanford_pku2016` (gap-based, self-heating); upstream `JART_VCM_*` (Schottky + plug/disc, planned); phenomenologically `vteam2015`, `yakopcic2013`; the linear-ion-drift family as the historical TiO₂ picture |
+| Electrochemical metallization (ECM, CBRAM) | no library folder yet; `vteam2015` / `yakopcic2013` as phenomenological fits |
+| Thermochemical memory (TCM) | none shipped; a thermal model (temperature state) is required |
+| Phase change memory (PCM) | outside this toolkit's single-state ODE (needs a thermal + crystallisation state) |
+| Threshold switches (Mott / thermal, e.g. NbO₂, VO₂) | upstream `Threshold_Switching_KumarWilliams*`, `…PickettWilliams*` (adapter-only for now); `Threshold_Switching_Pershin2013` (voltage thresholds, non-thermal) |
+| Interface / area-dependent | no dedicated folder; the linear-ion-drift family (state = doped fraction of a uniform film) is closest in spirit |
+| Data-driven | upstream `DataDriven2021` (adapter-only) |
+
 
 Ferroelectric and magnetic tunnel junctions are memristive by Chua's definition but are not
 in the library and not in this toolkit.
