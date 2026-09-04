@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.1 — 2026-09-04
+
+- `references/models.md` and chapter 6 §25 cited the JART VCM model as "Bengel
+  et al. 2024, doi:10.1088/2634-4386/ad57e7" after the upstream json; that DOI is
+  the JART **ECM** paper (Ahmad et al. 2024). Corrected to Bengel et al. 2020,
+  IEEE TCAS-I 67, 4618 (upstream finding P-7, ours N-9).
+- Chapter 6 §26 checks the notebook's version against `VERSION` instead of a
+  hard-coded string.
+- `references/taxonomy.md` gains the public-data column (see the study repo's
+  data atlas of 2026-09-04).
+
 ## 0.2.0 — 2026-09-04
 
 - `loop_metrics["area"]` is the sum of the |lobe areas| (split at the zero

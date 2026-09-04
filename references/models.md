@@ -240,7 +240,7 @@ re-derive now); **json-only** = upstream has metadata but no code.
 | HP_Joglekar2009 | Joglekar & Wolf 2009 (above) | json-only upstream; **covered** by `linear_ion_drift` window `joglekar` |
 | HP_Prodromakis2011 | Prodromakis et al. 2011 (above) | **covered** by window `prodromakis`; adapter shim to add |
 | DataDriven2021 | json gives a dataset DOI (10.5258/SOTON/D0132), no paper; the Southampton data-driven ReRAM model line (Messaris et al., IEEE TCAD 2018, doi:10.1109/TCAD.2018.2791468) is the likely source — to verify | adapter-only until the paper is confirmed |
-| JART_VCM_v1_simplified, JART_VCM_varV1_Simplified | doi:10.1088/2634-4386/ad57e7 (JART VCM simplified, *Neuromorph. Comput. Eng.* 2024) | clean-room (fitting target for the owner's TaOx device) |
+| JART_VCM_v1_simplified, JART_VCM_varV1_Simplified | Bengel et al. 2020, *IEEE TCAS-I* 67, 4618, doi:10.1109/TCSI.2020.3018502 (JART VCM v1 / v1b; user guide on emrl.de). The upstream json cites doi:10.1088/2634-4386/ad57e7 instead, which is the JART **ECM** paper (Ahmad et al. 2024, *Neuromorph. Comput. Eng.* 4, 034007) — finding P-7 | clean-room (fitting target for the owner's TaOx device) |
 | MEMMEA2025 | doi:10.1002/aelm.202400765 | json-only upstream; clean-room only if the paper states the full equation set |
 | Stanford_PKU | Jiang et al. 2016 (below) | **clean-room** — `stanford_pku2016` (fitting target) |
 | TUD_Schroedter_2022 | doi:10.1109/MOCAST54814.2022.9837726 | adapter-only first (implicit current equation), clean-room after reading the paper |

@@ -172,7 +172,7 @@ per-folder decision. The rest:
 
 | folder | why it is not (yet) a clean-room model here |
 |---|---|
-| `JART_VCM_v1_simplified`, `JART_VCM_varV1_Simplified` | Jülich–Aachen VCM model (Bengel et al. 2024): several coupled equations with Schottky and plug/disc resistances; the planned fitting target for a TaO$_x$ device — next |
+| `JART_VCM_v1_simplified`, `JART_VCM_varV1_Simplified` | Jülich–Aachen VCM model (Bengel et al. 2020, *IEEE TCAS-I*; the folders' own json cites the JART ECM paper of 2024 instead — finding P-7): several coupled equations with Schottky and plug/disc resistances; the planned fitting target for a TaO$_x$ device — next |
 | `Threshold_Switching_KumarWilliams2017`, `…_Simplified2020`, `…_PickettWilliams_Simplified2022` | thermal (temperature-state) NbO$_2$ threshold switches: volatile, current-controlled NDR; papers to read before transcription |
 | `Threshold_Switching_Pershin2013`, `TUD_Schroedter_2022` | no DOI in the folder / implicit current equation; adapter-only |
 | `DataDriven2021` | a data-driven model built on a measured dataset (Southampton), not on an equation set |
@@ -218,7 +218,9 @@ code(r"""
 records_path = os.path.join(os.path.dirname(mt.__file__), "..", "tests", "records", "crosscheck_v1.json")
 print("memristec-skill", mt.__version__)
 print("cross-check records: tests/records/crosscheck_v1.json", "(present)" if os.path.isfile(records_path) else "(MISSING)")
-check("this notebook ran on the version it documents", mt.__version__ == "0.2.0", mt.__version__)
+with open(os.path.join(os.path.dirname(mt.__file__), "..", "VERSION"), encoding="utf-8") as f:
+    version_file = f.read().strip()
+check("this notebook ran on the version it documents", mt.__version__ == version_file and mt.__version__ >= "0.2.0", mt.__version__)
 check("the cross-check records ship with the toolkit", os.path.isfile(records_path))
 """),
 

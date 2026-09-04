@@ -3,7 +3,7 @@
 An AI-agent skill, a verified Python toolkit, six executed chapter notebooks
 and (next) an undergraduate course on **compact memristor models**, built by
 studying the [MemrisTec Memristor Model Platform](https://memristec.de/memristor-model-platform/)
-end to end. Version 0.2.0 ships four model families written from their
+end to end. Version 0.2.x ships four model families written from their
 papers — linear ion drift (no / Joglekar / Biolek / Prodromakis windows),
 Yakopcic 2013, VTEAM 2015 and the Stanford–PKU filamentary model (Jiang 2016)
 — on one ODE driver, with I-V sweeps, pinched-loop metrics, dynamic route
