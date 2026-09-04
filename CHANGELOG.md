@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.3 -- 2026-09-04
+
+- `watch_upstream.py` audit-log names carry microseconds: two runs of one process within the
+  same second overwrote each other (the end-to-end test failed on the Linux and macOS CI
+  runners of the first push, and once locally). Failing-first: the same test now asserts two logs.
+
 ## 0.2.2 — 2026-09-04
 
 - README rewritten as the product page: the device-class / public-data / model-family map

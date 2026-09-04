@@ -4,7 +4,7 @@ description: Simulate, compare and fit compact memristor models (linear ion drif
 license: Apache-2.0
 ---
 
-# memristec-skill 0.2.2
+# memristec-skill 0.2.3
 
 Clean-room compact memristor models (`references/models.md`), one ODE driver,
 I-V sweeps, pinched-loop metrics, dynamic route maps, and an optional

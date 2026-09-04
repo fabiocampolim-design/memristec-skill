@@ -155,11 +155,14 @@ def render_weekly(week, prev, new, commits):
 
 def audit(log_dir, argv, extra):
     os.makedirs(log_dir, exist_ok=True)
-    stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    now = datetime.datetime.now(datetime.timezone.utc)
+    stamp = now.strftime("%Y%m%dT%H%M%SZ")
     rec = {"tool": "watch_upstream", "version": __version__, "argv": list(argv), "utc": stamp,
            "python": platform.python_version(), "platform": platform.platform()}
     rec.update(extra)
-    path = os.path.join(log_dir, f"watch_upstream_{stamp}_{os.getpid()}.json")
+    # microseconds in the name: two runs of one process inside the same second (the end-to-end
+    # test on a fast CI runner, 2026-09-04) overwrote each other with a second-resolution stamp
+    path = os.path.join(log_dir, f"watch_upstream_{stamp[:-1]}{now.strftime('%f')}Z_{os.getpid()}.json")
     with open(path, "w", encoding="utf-8") as f:
         json.dump(rec, f, indent=2, default=str)
     return path
