@@ -53,9 +53,12 @@ def tally(path):
             if o.get("output_type") == "error":
                 t["errors"] += 1
             text = "".join(o.get("text", [])) if isinstance(o.get("text"), list) else o.get("text", "")
-            t["pass"] += text.count("[PASS]")
-            t["fail"] += text.count("[FAIL]")
-            t["fail_labels"] += [ln for ln in text.splitlines() if "[FAIL]" in ln]
+            lines = [ln.strip() for ln in text.splitlines()]
+            # only the check() marker at the start of a line counts: the tally cell's own
+            # "search this notebook for '[FAIL]'" hint used to inflate the count by one
+            t["pass"] += sum(1 for ln in lines if ln.startswith("[PASS]"))
+            t["fail"] += sum(1 for ln in lines if ln.startswith("[FAIL]"))
+            t["fail_labels"] += [ln for ln in lines if ln.startswith("[FAIL]")]
             data = o.get("data", {})
             if "image/png" in data:
                 t["figures"] += 1
