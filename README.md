@@ -1,12 +1,14 @@
 # memristec-skill
 
-An AI-agent skill, a verified Python toolkit and (later) executed chapter
-notebooks and an undergraduate course on **compact memristor models**, built
-by studying the [MemrisTec Memristor Model Platform](https://memristec.de/memristor-model-platform/)
-end to end. Version 0.1.0 is the foundation: the linear-ion-drift family
-(no / Joglekar / Biolek / Prodromakis windows), the Yakopcic 2013 model, a
-shared ODE driver, I-V sweeps, pinched-loop metrics, a dynamic route map, and
-an optional cross-check against a local clone of the MemrisTec Model Library.
+An AI-agent skill, a verified Python toolkit, six executed chapter notebooks
+and (next) an undergraduate course on **compact memristor models**, built by
+studying the [MemrisTec Memristor Model Platform](https://memristec.de/memristor-model-platform/)
+end to end. Version 0.2.0 ships four model families written from their
+papers — linear ion drift (no / Joglekar / Biolek / Prodromakis windows),
+Yakopcic 2013, VTEAM 2015 and the Stanford–PKU filamentary model (Jiang 2016)
+— on one ODE driver, with I-V sweeps, pinched-loop metrics, dynamic route
+maps, pulse programming, and an optional cross-check against a local clone of
+the MemrisTec Model Library (agreement 2e-16 … 4e-15 in the derivative fields).
 
 ## Quick start
 
@@ -18,6 +20,19 @@ python -m pytest tests -q
 ```
 
 Manual: `docs/USER_MANUAL.md`. For AI agents: `SKILL.md`, `AGENTS.md`.
+Design notes: `docs/DESIGN.md`. Contributing: `CONTRIBUTING.md`.
+
+## The book
+
+Six executed chapter notebooks under `chapters/` re-derive the model families of the
+MemrisTec Model Library from their papers and run them through one driver: the memristor as
+a state-controlled resistor (Chua, Strukov's affine law, the pinched loop), linear ion drift
+and its window functions, threshold switching with VTEAM, filamentary switching with the
+Stanford–PKU and Yakopcic models, pulse programming and neuromorphic hand-off, and
+benchmarking, numerics, fitting and the cross-check against the library. Every figure is
+generated live and every claim is checked — 83 inline checks, 25 figures, 0 failures
+(`chapters/README.md`). The notebooks are generated from `build/*.py` — do not edit them by
+hand.
 
 ## Licence
 

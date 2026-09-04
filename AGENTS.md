@@ -11,7 +11,7 @@ conda env (`%USERPROFILE%\miniconda3\envs\memristec\python.exe` on Windows,
 | Health check | `python scripts/verify_memristec.py` |
 | Toolkit self-test | `python scripts/memristec_tools.py --selftest` |
 | Fast suite | `python -m pytest tests -q` |
-| Static check (CI runs it first) | `python -m pyflakes scripts tests` |
+| Static check (CI runs it first) | `python -m pyflakes scripts tests build` |
 | Cross-check against a local upstream clone | `MEMRISTEC_MODEL_LIBRARY=<clone> python -m pytest tests/test_upstream_crosscheck.py -q` |
 | Cross-check CLI with audit log | `MEMRISTEC_MODEL_LIBRARY=<clone> python scripts/upstream_adapter.py` |
 
@@ -23,7 +23,7 @@ missing from this file or from `docs/USER_MANUAL.md`.
 | flag | meaning |
 |---|---|
 | `--selftest` | run the built-in physics checks and exit |
-| `--model {linear_ion_drift,yakopcic2013}` | model to simulate |
+| `--model {linear_ion_drift,stanford_pku2016,vteam2015,yakopcic2013}` | model to simulate |
 | `--window {none,joglekar,biolek,prodromakis}` | window for linear_ion_drift (default joglekar) |
 | `--stimulus {rectangular,sin,triangular}` | waveform (default sin) |
 | `--amplitude A` | peak voltage in V (default 1.0) |
@@ -40,12 +40,24 @@ Exit codes: 0 success, 1 a self-test check failed, 2 usage error. A run
 writes `<outdir>/<model>_<stimulus>_A<amp>V_F<freq>Hz.csv` (header
 `t,v,i,x`) and prints the loop metrics as JSON unless `-q`.
 
+Python entry points (module `memristec_tools`): models `LinearIonDrift(window=...)`,
+`Yakopcic2013`, `VTEAM2015`, `StanfordPKU2016` (registry `MODELS`, factory
+`make_model(name, **params)`); driver `simulate(model, t, v, method)`;
+`iv_sweep(model, amplitude, frequency, cycles, n_per_cycle, stimulus, method)`;
+stimuli `sine`, `triangular`, `rectangular`, `pulse_train(t, amplitude, width,
+period, n_pulses, t0=0.0, baseline=0.0)`; `pulse_response(model, amplitude,
+width, period, n_pulses, read_voltage=0.1, n_per_period=400, method)` ->
+`{t, v, x, i, x_after, G_after}`; `loop_metrics(res)` -> `area` (sum of |lobe
+areas| over the trajectory), `area_signed`, `i_max`, `i_min`,
+`pinched_at_origin`, `r_min`, `r_max`; `dynamic_route_map(model, x_grid,
+v_values)`. Equations and parameter provenance: `references/models.md`.
+
 ## `scripts/upstream_adapter.py`
 
 | flag | meaning |
 |---|---|
 | `--library PATH` | path to a local clone (default: $MEMRISTEC_MODEL_LIBRARY) |
-| `--model {HP_Biolek2009,Yakopcic2013}` | upstream folder to compare (default: all shims) |
+| `--model {HP_Biolek2009,Stanford_PKU,VTEAM2015,Yakopcic2013}` | upstream folder to compare (default: all shims) |
 | `--outdir DIR` | output directory (default ./out) |
 | `--log-dir DIR` | audit-log directory (default <outdir>/logs) |
 | `-q`, `--quiet` | print only the verdict |
@@ -70,6 +82,12 @@ check prints `[SKIP] upstream cross-check`.
 Chapters are generated: edit `build/partNN_*.py`, run assemble then execute;
 `tests/test_notebooks.py` compares the committed notebooks with the sources
 and their outputs (0 FAIL, captions = figures, ≤ 1 MB). Never edit an `.ipynb`.
+`assemble.py` writes every cell with **empty outputs**, and re-assembling
+chapter 00 is needed whenever a chapter is added (its list is generated) —
+so always execute after assembling, every chapter you re-assembled; a
+notebook committed after assemble alone fails `test_committed_notebook_is_green`.
+`execute.py --outdir` runs copies elsewhere and passes `MEMRISTEC_SKILL_ROOT`
+so the setup cell still finds `scripts/` (that is how `--run-notebooks` works).
 
 | flag | tool | meaning |
 |---|---|---|
@@ -99,7 +117,7 @@ Every `memristec_tools.py` and `upstream_adapter.py` run writes
 ## Records
 
 `tests/records/crosscheck_v1.json` — `schema: 1`, `generated`, `note`, and
-`models.<upstream folder>` with `max_rel_dxdt`, `max_rel_i` (both tools) and
+`models.<upstream folder>` (HP_Biolek2009, Yakopcic2013, VTEAM2015, Stanford_PKU) with `max_rel_dxdt`, `max_rel_i` (both tools) and
 `max_abs_x_traj` (trajectory test), plus free-text `upstream_window_actual`
 / `finding` annotations. Bump `schema` when a key changes meaning.
 

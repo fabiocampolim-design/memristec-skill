@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 — 2026-09-03
+## 0.2.0 — 2026-09-04
 
 - `loop_metrics["area"]` is the sum of the |lobe areas| (split at the zero
   crossings of v); the former signed whole-trajectory value, which cancels to

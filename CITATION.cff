@@ -3,7 +3,7 @@ message: "If you use this skill, please cite it as below, and cite the model pap
 title: "memristec-skill: an AI-agent skill, verified toolkit and course on compact memristor models (MemrisTec Model Platform)"
 type: software
 version: "0.2.0"
-date-released: "2026-09-03"
+date-released: "2026-09-04"
 license: Apache-2.0
 authors:
   - family-names: Campolim

@@ -43,7 +43,7 @@ def test_skill_frontmatter_and_citation_match_licence():
 
 
 def test_every_python_file_has_spdx_header():
-    files = [f for pat in ("scripts/*.py", "tests/*.py", "docs/*.py")
+    files = [f for pat in ("scripts/*.py", "tests/*.py", "docs/*.py", "build/*.py")
              for f in glob.glob(os.path.join(ROOT, pat))]
     assert files
     missing = [f for f in files if "SPDX-License-Identifier: Apache-2.0" not in _read(f)[:300]]

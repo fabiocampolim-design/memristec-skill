@@ -33,6 +33,19 @@ def test_script_flags_are_documented(module):
         assert f in manual, f"{module}: {f} missing from docs/USER_MANUAL.md"
 
 
+@pytest.mark.parametrize("module", ["memristec_tools", "upstream_adapter"])
+def test_flag_choices_are_documented(module):
+    """Finding N-3: the flag names were guarded but their choices were not, and
+    AGENTS.md / the manual still listed two models after four shipped."""
+    mod = __import__(module)
+    agents, manual = _read("AGENTS.md"), _read("docs", "USER_MANUAL.md")
+    for a in mod.build_parser()._actions:
+        if a.choices and a.option_strings:
+            expected = f"`{a.option_strings[-1]} {{{','.join(a.choices)}}}`"     # in the parser's order
+            assert expected in agents, f"{module}: {expected} missing from AGENTS.md"
+            assert expected in manual, f"{module}: {expected} missing from docs/USER_MANUAL.md"
+
+
 def test_version_citation_changelog_agree():
     ver = _read("VERSION").strip()
     assert f'version: "{ver}"' in _read("CITATION.cff")

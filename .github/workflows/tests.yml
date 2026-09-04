@@ -20,7 +20,7 @@ jobs:
           python-version: ${{ matrix.python }}
       - run: python -m pip install -r requirements.txt
       # rule 5: static check over the whole tree, as its own step, before the suite
-      - run: python -m pip install --quiet pyflakes && python -m pyflakes scripts tests
+      - run: python -m pip install --quiet pyflakes && python -m pyflakes scripts tests build
       - run: python scripts/verify_memristec.py
         env:
           PYTHONIOENCODING: utf-8

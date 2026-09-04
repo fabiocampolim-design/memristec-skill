@@ -60,7 +60,7 @@ python scripts/memristec_tools.py --model yakopcic2013 --stimulus triangular -q
 | flag | meaning |
 |---|---|
 | `--selftest` | run the built-in physics checks and exit |
-| `--model {linear_ion_drift,yakopcic2013}` | model to simulate |
+| `--model {linear_ion_drift,stanford_pku2016,vteam2015,yakopcic2013}` | model to simulate |
 | `--window {none,joglekar,biolek,prodromakis}` | window for linear_ion_drift (default joglekar) |
 | `--stimulus {rectangular,sin,triangular}` | waveform (default sin) |
 | `--amplitude A` | peak voltage in V (default 1.0) |
@@ -75,7 +75,8 @@ python scripts/memristec_tools.py --model yakopcic2013 --stimulus triangular -q
 
 Outputs: `<outdir>/<model>_<stimulus>_A<amp>V_F<freq>Hz.csv` with columns
 `t,v,i,x` (seconds, volts, amperes, dimensionless state), the loop metrics
-printed as JSON (`area`, `i_max`, `i_min`, `pinched_at_origin`, `r_min`,
+printed as JSON (`area` — the sum of the |lobe areas| over the whole
+trajectory —, `area_signed`, `i_max`, `i_min`, `pinched_at_origin`, `r_min`,
 `r_max`), and an audit record in `<log-dir>`. Exit codes: 0 success, 1 a
 self-test check failed, 2 usage error.
 
@@ -84,18 +85,31 @@ self-test check failed, 2 usage error.
 ```python
 import sys; sys.path.insert(0, "scripts")
 import numpy as np
-from memristec_tools import (make_model, LinearIonDrift, Yakopcic2013, simulate, iv_sweep,
-                             loop_metrics, dynamic_route_map, STIMULI)
+from memristec_tools import (make_model, LinearIonDrift, Yakopcic2013, VTEAM2015, StanfordPKU2016,
+                             simulate, iv_sweep, loop_metrics, dynamic_route_map, STIMULI,
+                             pulse_train, pulse_response)
 
 m = LinearIonDrift(window="joglekar", R_off=16e3, p=10, x0=0.1)
 res = iv_sweep(m, amplitude=1.0, frequency=1.0, cycles=1, n_per_cycle=2000, stimulus="sin", method="rk4")
 met = loop_metrics(res)                     # dict
 drm = dynamic_route_map(m, np.linspace(0, 1, 101), [-1.0, 0.0, 1.0])   # {v: dx/dt over x}
+
+# pulse programming (chapter 5): 20 potentiating pulses, conductance read at 0.1 V after each
+ltp = pulse_response(VTEAM2015(x0=0.8), -0.5, width=0.02, period=0.05, n_pulses=20)
+print(ltp["x_after"][:3], ltp["G_after"][:3])       # VTEAM potentiates with pulses below v_on
+t = np.linspace(0, 1, 20001); v = pulse_train(t, 0.9, width=1e-2, period=5e-2, n_pulses=10)
+snap = simulate(StanfordPKU2016(), t, v)              # any train through the driver
 ```
 
 - `Model` API: `state_derivative(x, v)`, `current(x, v)`, `params`, `x0`,
   `clip(x)`; `LinearIonDrift` adds `resistance(x)`, `window_value(x, i)`,
-  `k`; `Yakopcic2013` adds `g(v)`, `f(x, v)`.
+  `k`; `Yakopcic2013` adds `g(v)`, `f(x, v)`; `VTEAM2015` adds `resistance(x)`,
+  `window_value(x)` (x = 0 is R_on — the paper's convention); `StanfordPKU2016`
+  adds `gap(x)`, `temperature(x, v)`, `gamma(x)`, `gap_rate(x, v)` (x = 1 is
+  the smallest gap; stiff: use 20 000 points per period).
+- `pulse_response` returns `x_after[k]` / `G_after[k]`, the state and the read
+  conductance after pulse k; `loop_metrics["area"]` sums the |lobe areas| over
+  the whole trajectory (divide by `cycles` for the area per period).
 - `simulate(model, t, v, method)` integrates on your grid and returns
   `SimResult(t, v, i, x)`; `method` is `euler`, `rk4` (default) or `ivp`.
 - Stimuli: `STIMULI["sin"|"triangular"|"rectangular"](t, amplitude,
@@ -120,7 +134,7 @@ python -m pytest tests/test_upstream_crosscheck.py -q
 | flag | meaning |
 |---|---|
 | `--library PATH` | path to a local clone (default: `$MEMRISTEC_MODEL_LIBRARY`) |
-| `--model {HP_Biolek2009,Yakopcic2013}` | upstream folder to compare (default: all shims) |
+| `--model {HP_Biolek2009,Stanford_PKU,VTEAM2015,Yakopcic2013}` | upstream folder to compare (default: all shims) |
 | `--outdir DIR` | output directory (default ./out) |
 | `--log-dir DIR` | audit-log directory (default <outdir>/logs) |
 | `-q`, `--quiet` | print only the verdict |
@@ -145,7 +159,7 @@ them with your results — they say which version produced which file.
 ## 7. Tests
 
 ```bash
-python -m pyflakes scripts tests
+python -m pyflakes scripts tests build
 python -m pytest tests -q
 ```
 
