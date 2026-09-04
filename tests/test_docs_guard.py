@@ -24,7 +24,7 @@ def _flags(parser):
     return {s for a in parser._actions for s in a.option_strings if s.startswith("--") and s != "--help"}
 
 
-@pytest.mark.parametrize("module", ["memristec_tools", "upstream_adapter", "verify_memristec", "assemble", "execute"])
+@pytest.mark.parametrize("module", ["memristec_tools", "upstream_adapter", "verify_memristec", "watch_upstream", "assemble", "execute"])
 def test_script_flags_are_documented(module):
     mod = __import__(module)
     agents, manual = _read("AGENTS.md"), _read("docs", "USER_MANUAL.md")

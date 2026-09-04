@@ -204,3 +204,36 @@ Exit codes: 0 OK; 1 a FAIL, an error output, an unexecuted cell or an
 nbconvert failure; 2 unknown `--which`. Every run appends to
 `logs/assemble.log` or `logs/execute.log` (gitignored). Chapter 6 §24 needs
 `MEMRISTEC_MODEL_LIBRARY` for its cross-check cell and prints `[SKIP]` otherwise.
+
+## 9. Watch the upstream library weekly
+
+The MemrisTec GitLab sits behind a bot wall, so the watch works on your local
+clone: it fetches, records every remote branch head, the tags and the tree
+hash of every `models/<folder>` on every branch, compares with the previous
+run and writes a dated report. Only tree-level git commands are used, so a
+partial clone (`--filter=blob:none`) never downloads blobs.
+
+```bash
+export MEMRISTEC_MODEL_LIBRARY=/path/to/memristec-model-library
+python scripts/watch_upstream.py --weekly                    # report in ../docs/watch/YYYY-WW.md
+python scripts/watch_upstream.py --weekly --no-fetch -q      # offline comparison
+python scripts/watch_upstream.py --snapshot --state-dir /tmp/state --clone /path/to/clone
+powershell -File scripts/register_watch_task.ps1 -DryRun     # Windows: weekly task, Mondays 08:00
+```
+
+| flag | meaning |
+|---|---|
+| `--weekly` | fetch, compare with the previous snapshot, write the report, then snapshot |
+| `--snapshot` | record the current state only |
+| `--no-fetch` | do not `git fetch`; compare the clone as it is |
+| `--clone PATH` | local clone of the library (default: `$MEMRISTEC_MODEL_LIBRARY`) |
+| `--state-dir DIR` | snapshot and logs (default `<study>/forum/upstream-watch`) |
+| `--outdir DIR` | weekly reports (default `<study>/docs/watch`) |
+| `--log-dir DIR` | audit-log directory (default `<state-dir>/logs`) |
+| `-q`, `--quiet` | print only the verdict |
+| `--version` | print the version and exit |
+
+Exit codes: 0 OK, 1 git failed, 2 no mode given, 3 no clone available. The
+first run reports every branch as new; from the second run on it lists moved
+branches, added / removed / changed model folders and the new commits (one
+line each, no diffs).

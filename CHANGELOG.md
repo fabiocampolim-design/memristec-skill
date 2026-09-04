@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.2 — 2026-09-04
+
+- README rewritten as the product page: the device-class / public-data / model-family map
+  (`docs/figures/memristor-map.svg`, drawn by `build/map_figure.py`) opens it; features as
+  guarantees, honest comparison, roadmap, how it was built (CRediT).
+- `scripts/watch_upstream.py`: the weekly upstream watch (rule 23 / S8) over a local clone of
+  the MemrisTec Model Library -- fetches, lists new commits per branch and changed model
+  folders since the previous run, writes `docs/watch/YYYY-WW.md`; `scripts/register_watch_task.ps1`
+  schedules it on Windows.
+
 ## 0.2.1 — 2026-09-04
 
 - `references/models.md` and chapter 6 §25 cited the JART VCM model as "Bengel

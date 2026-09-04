@@ -77,6 +77,29 @@ Exit codes: 0 every comparison within tolerance, 1 a comparison exceeded
 Exit codes: 0 all checks passed, 1 otherwise. Without a library the fifth
 check prints `[SKIP] upstream cross-check`.
 
+## `scripts/watch_upstream.py` — the weekly upstream watch (rule 23 / S8)
+
+Works on a local clone (the library's GitLab is behind a bot wall; `git` gets through):
+fetches, records branch heads, tags and the tree hash of every `models/<folder>` per
+branch, compares with the previous snapshot, writes `<outdir>/YYYY-WW.md`. Tree-level git
+only — a partial clone downloads no blobs.
+
+| flag | meaning |
+|---|---|
+| `--weekly` | fetch, compare with the previous snapshot, write the report, then snapshot |
+| `--snapshot` | record the current state only |
+| `--no-fetch` | do not `git fetch`; compare the clone as it is |
+| `--clone PATH` | local clone of the library (default: `$MEMRISTEC_MODEL_LIBRARY`) |
+| `--state-dir DIR` | snapshot (`state.json`) and logs (default `<study>/forum/upstream-watch`) |
+| `--outdir DIR` | weekly reports (default `<study>/docs/watch`) |
+| `--log-dir DIR` | audit-log directory (default `<state-dir>/logs`) |
+| `-q`, `--quiet` | print only the verdict |
+| `--version` | print `memristec-skill <VERSION>` and exit |
+
+Exit codes: 0 OK, 1 git failed (fetch or read), 2 usage error (no mode), 3 no clone.
+`scripts/register_watch_task.ps1` registers the Windows Task Scheduler job (`-Python`,
+`-Clone`, `-Day`, `-At`, `-Remove`, `-DryRun`, `-Version`; Mondays 08:00 by default).
+
 ## `build/assemble.py` and `build/execute.py` — the book
 
 Chapters are generated: edit `build/partNN_*.py`, run assemble then execute;

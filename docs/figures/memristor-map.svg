@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 720" width="1180" height="720" font-family="'IBM Plex Sans', 'Segoe UI', Helvetica, Arial, sans-serif" role="img" aria-label="Memristor device classes, public data sets and the compact-model families that fit them">
+<rect width="100%" height="100%" fill="#FFFFFF" rx="8"/>
+<text x="20" y="30" font-size="13" font-weight="700" letter-spacing="1.2" fill="#6B7A88">DEVICE CLASS</text>
+<text x="430" y="30" font-size="13" font-weight="700" letter-spacing="1.2" fill="#6B7A88">PUBLIC DATA SET</text>
+<text x="960" y="30" font-size="13" font-weight="700" letter-spacing="1.2" fill="#6B7A88">MODEL FAMILY</text>
+<path d="M310,110.0 C370,110.0 370,73.1 430,73.1" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,73.1 C885,73.1 885,650.0 960,650.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,73.1 C885,73.1 885,218.0 960,218.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,73.1 C885,73.1 885,326.0 960,326.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,110.0 C370,110.0 370,107.2 430,107.2" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,107.2 C885,107.2 885,434.0 960,434.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,107.2 C885,107.2 885,218.0 960,218.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,107.2 C885,107.2 885,326.0 960,326.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,107.2 C885,107.2 885,650.0 960,650.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,110.0 C370,110.0 370,141.3 430,141.3" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,141.3 C885,141.3 885,218.0 960,218.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,141.3 C885,141.3 885,326.0 960,326.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,141.3 C885,141.3 885,434.0 960,434.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,110.0 C370,110.0 370,175.4 430,175.4" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,175.4 C885,175.4 885,650.0 960,650.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,110.0 C370,110.0 370,209.5 430,209.5" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,209.5 C885,209.5 885,326.0 960,326.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,110.0 C370,110.0 370,243.6 430,243.6" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,243.6 C885,243.6 885,218.0 960,218.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,243.6 C885,243.6 885,326.0 960,326.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,110.0 C370,110.0 370,277.7 430,277.7" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,277.7 C885,277.7 885,218.0 960,218.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,277.7 C885,277.7 885,650.0 960,650.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,110.0 C370,110.0 370,311.8 430,311.8" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,311.8 C885,311.8 885,650.0 960,650.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,218.0 C370,218.0 370,345.9 430,345.9" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,110.0 C370,110.0 370,345.9 430,345.9" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,542.0 C370,542.0 370,345.9 430,345.9" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,650.0 C370,650.0 370,345.9 430,345.9" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,345.9 C885,345.9 885,218.0 960,218.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,345.9 C885,345.9 885,326.0 960,326.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,345.9 C885,345.9 885,650.0 960,650.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,218.0 C370,218.0 370,380.0 430,380.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,380.0 C885,380.0 885,218.0 960,218.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,380.0 C885,380.0 885,326.0 960,326.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,650.0 C370,650.0 370,414.1 430,414.1" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,414.1 C885,414.1 885,218.0 960,218.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,542.0 C370,542.0 370,448.2 430,448.2" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,448.2 C885,448.2 885,218.0 960,218.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,542.0 C370,542.0 370,482.3 430,482.3" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,650.0 C370,650.0 370,516.4 430,516.4" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,516.4 C885,516.4 885,218.0 960,218.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,516.4 C885,516.4 885,650.0 960,650.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,542.0 C370,542.0 370,550.5 430,550.5" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,110.0 C370,110.0 370,550.5 430,550.5" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,550.5 C885,550.5 885,218.0 960,218.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,434.0 C370,434.0 370,584.6 430,584.6" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,110.0 C370,110.0 370,584.6 430,584.6" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,584.6 C885,584.6 885,542.0 960,542.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,584.6 C885,584.6 885,326.0 960,326.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,326.0 C370,326.0 370,618.7 430,618.7" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,326.0 C370,326.0 370,652.8 430,652.8" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,652.8 C885,652.8 885,650.0 960,650.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,110.0 C370,110.0 370,686.9 430,686.9" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M310,434.0 C370,434.0 370,686.9 430,686.9" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,686.9 C885,686.9 885,110.0 960,110.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,686.9 C885,686.9 885,218.0 960,218.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,686.9 C885,686.9 885,326.0 960,326.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,686.9 C885,686.9 885,434.0 960,434.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,686.9 C885,686.9 885,542.0 960,542.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<path d="M810,686.9 C885,686.9 885,650.0 960,650.0" fill="none" stroke="#A9B6C2" stroke-width="1.2" opacity="0.8"/>
+<rect x="20" y="89.0" width="290" height="42" rx="4" fill="#D5EBEC" stroke="#0C7C84" stroke-width="1.3"/>
+<text x="30" y="109.0" font-size="13" fill="#3B4753">VCM oxide</text>
+<text x="30" y="123.0" font-size="10.5" fill="#6B7A88">TiOx · HfOx · TaOx · SiOx</text>
+<rect x="20" y="197.0" width="290" height="42" rx="4" fill="#D5EBEC" stroke="#0C7C84" stroke-width="1.3"/>
+<text x="30" y="217.0" font-size="13" fill="#3B4753">ECM / CBRAM</text>
+<text x="30" y="231.0" font-size="10.5" fill="#6B7A88">Ag, Cu filaments · Ag2S · SDC</text>
+<rect x="20" y="305.0" width="290" height="42" rx="4" fill="#D5EBEC" stroke="#0C7C84" stroke-width="1.3"/>
+<text x="30" y="325.0" font-size="13" fill="#3B4753">Phase change</text>
+<text x="30" y="339.0" font-size="10.5" fill="#6B7A88">GeSbTe</text>
+<rect x="20" y="413.0" width="290" height="42" rx="4" fill="#D5EBEC" stroke="#0C7C84" stroke-width="1.3"/>
+<text x="30" y="433.0" font-size="13" fill="#3B4753">Threshold / OTS</text>
+<text x="30" y="447.0" font-size="10.5" fill="#6B7A88">volatile, NDR</text>
+<rect x="20" y="521.0" width="290" height="42" rx="4" fill="#D5EBEC" stroke="#0C7C84" stroke-width="1.3"/>
+<text x="30" y="541.0" font-size="13" fill="#3B4753">Organic / molecular</text>
+<text x="30" y="555.0" font-size="10.5" fill="#6B7A88">polymers · single molecules</text>
+<rect x="20" y="629.0" width="290" height="42" rx="4" fill="#D5EBEC" stroke="#0C7C84" stroke-width="1.3"/>
+<text x="30" y="649.0" font-size="13" fill="#3B4753">Perovskite / other ionic</text>
+<text x="30" y="663.0" font-size="10.5" fill="#6B7A88">halide perovskite · MOF · iontronic</text>
+<rect x="430" y="60.1" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="77.6" font-size="12.5" fill="#3B4753">Southampton TiO2 data-driven ReRAM data</text>
+<rect x="430" y="94.2" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="111.7" font-size="12.5" fill="#3B4753">Fabrication-to-modeling database (6 190 devices)</text>
+<rect x="430" y="128.3" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="145.8" font-size="12.5" fill="#3B4753">Southampton benchmarking methodology set</text>
+<rect x="430" y="162.4" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="179.9" font-size="12.5" fill="#3B4753">Southampton variability / secure ID</text>
+<rect x="430" y="196.5" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="214.0" font-size="12.5" fill="#3B4753">Southampton threshold-logic gates</text>
+<rect x="430" y="230.6" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="248.1" font-size="12.5" fill="#3B4753">Southampton SiC memristor sets</text>
+<rect x="430" y="264.7" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="282.2" font-size="12.5" fill="#3B4753">UCL SiO2 edge-detection set</text>
+<rect x="430" y="298.8" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="316.3" font-size="12.5" fill="#3B4753">TiO2 resistive drift (IEEE DataPort)</text>
+<rect x="430" y="332.9" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="350.4" font-size="12.5" fill="#3B4753">RSCT benchmark (8 sets, 7 families)</text>
+<rect x="430" y="367.0" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="384.5" font-size="12.5" fill="#3B4753">Knowm SDC memristors</text>
+<rect x="430" y="401.1" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="418.6" font-size="12.5" fill="#3B4753">Prussian-blue MOF C-AFM data</text>
+<rect x="430" y="435.2" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="452.7" font-size="12.5" fill="#3B4753">Carbazole polymer PPF / STDP</text>
+<rect x="430" y="469.3" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="486.8" font-size="12.5" fill="#3B4753">Single-molecule switches (Delft)</text>
+<rect x="430" y="503.4" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="520.9" font-size="12.5" fill="#3B4753">Perovskite I-V data paper</text>
+<rect x="430" y="537.5" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="555.0" font-size="12.5" fill="#3B4753">Southampton UV-assisted hybrid cells</text>
+<rect x="430" y="571.6" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="589.1" font-size="12.5" fill="#3B4753">Southampton 1S1R OTS selector + memory</text>
+<rect x="430" y="605.7" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="623.2" font-size="12.5" fill="#3B4753">Southampton GeSbTe phase-change sets</text>
+<rect x="430" y="639.8" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="657.3" font-size="12.5" fill="#3B4753">IBM aihwkit PCM statistical model</text>
+<rect x="430" y="673.9" width="380" height="26" rx="4" fill="#F6E4CC" stroke="#B8690F" stroke-width="1.3"/>
+<text x="440" y="691.4" font-size="12.5" fill="#3B4753">MemrisTec model table (model outputs)</text>
+<rect x="960" y="89.0" width="200" height="42" rx="4" fill="#E3DEF2" stroke="#5B4A9E" stroke-width="1.3"/>
+<text x="970" y="109.0" font-size="13" fill="#3B4753">Linear ion drift + window</text>
+<text x="970" y="123.0" font-size="10.5" fill="#6B7A88">linear_ion_drift</text>
+<rect x="960" y="197.0" width="200" height="42" rx="4" fill="#E3DEF2" stroke="#5B4A9E" stroke-width="1.3"/>
+<text x="970" y="217.0" font-size="13" fill="#3B4753">Yakopcic 2013</text>
+<text x="970" y="231.0" font-size="10.5" fill="#6B7A88">yakopcic2013</text>
+<rect x="960" y="305.0" width="200" height="42" rx="4" fill="#E3DEF2" stroke="#5B4A9E" stroke-width="1.3"/>
+<text x="970" y="325.0" font-size="13" fill="#3B4753">VTEAM 2015</text>
+<text x="970" y="339.0" font-size="10.5" fill="#6B7A88">vteam2015</text>
+<rect x="960" y="413.0" width="200" height="42" rx="4" fill="#E3DEF2" stroke="#5B4A9E" stroke-width="1.3"/>
+<text x="970" y="433.0" font-size="13" fill="#3B4753">Stanford–PKU · JART</text>
+<text x="970" y="447.0" font-size="10.5" fill="#6B7A88">stanford_pku2016</text>
+<rect x="960" y="521.0" width="200" height="42" rx="4" fill="#E3DEF2" stroke="#5B4A9E" stroke-width="1.3"/>
+<text x="970" y="541.0" font-size="13" fill="#3B4753">Thermal threshold</text>
+<text x="970" y="555.0" font-size="10.5" fill="#6B7A88">adapter only</text>
+<rect x="960" y="629.0" width="200" height="42" rx="4" fill="#E3DEF2" stroke="#5B4A9E" stroke-width="1.3"/>
+<text x="970" y="649.0" font-size="13" fill="#3B4753">Data-driven</text>
+<text x="970" y="663.0" font-size="10.5" fill="#6B7A88">adapter only</text>
+</svg>
